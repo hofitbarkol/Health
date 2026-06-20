@@ -1,5 +1,5 @@
 {
-  "name": "מעקב בריאות",
+  "name": "מעקב בריאות v3",
   "short_name": "בריאות",
   "description": "מעקב משקל, תזונה ומאקרו יומי",
   "start_url": "/",
@@ -22,5 +22,6 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "version": "3.0"
 }

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>מעקב בריאות</title>
+<title>מעקב בריאות v3</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0d0d0d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -13,295 +13,276 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap');
-:root {
-  --bg:#0d0d0d; --surface:#181818; --surface2:#212121; --border:#2a2a2a;
-  --accent:#b5f03d; --blue:#4db8ff; --orange:#ff8c42; --purple:#c084fc;
-  --red:#ff5c5c; --text:#efefef; --muted:#777; --dim:#444;
-}
+:root{--bg:#0d0d0d;--s:#181818;--s2:#212121;--b:#2a2a2a;--a:#b5f03d;--blue:#4db8ff;--org:#ff8c42;--pur:#c084fc;--red:#ff5c5c;--tx:#efefef;--mu:#777;--dim:#444}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-height:100vh;max-width:500px;margin:0 auto;padding-bottom:30px}
+body{background:var(--bg);color:var(--tx);font-family:"Heebo",sans-serif;max-width:500px;margin:0 auto;padding-bottom:30px}
+
+/* VERSION BADGE */
+.ver{position:fixed;top:10px;left:10px;background:#1a1a1a;border:1px solid #333;border-radius:20px;font-size:9px;color:var(--dim);padding:3px 8px;z-index:999;letter-spacing:1px}
 
 /* HEADER */
-.hdr{padding:22px 20px 14px;border-bottom:1px solid var(--border)}
+.hdr{padding:22px 20px 14px;border-bottom:1px solid var(--b)}
 .hdr-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
-.cw-lbl{font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
-.cw-val{font-size:60px;font-weight:900;color:var(--accent);line-height:1;letter-spacing:-3px}
-.cw-unit{font-size:18px;font-weight:400;color:var(--muted)}
-.hdr-stats{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
-.hstat-val{font-size:18px;font-weight:700}
-.hstat-lbl{font-size:10px;color:var(--muted)}
-.prog-track{height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-bottom:4px}
-.prog-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .5s}
-.prog-lbls{display:flex;justify-content:space-between;font-size:10px;color:var(--dim)}
+.cw-lbl{font-size:10px;letter-spacing:2px;color:var(--mu);text-transform:uppercase}
+.cw-val{font-size:58px;font-weight:900;color:var(--a);line-height:1;letter-spacing:-3px}
+.cw-u{font-size:17px;font-weight:400;color:var(--mu)}
+.hdr-r{display:flex;flex-direction:column;gap:7px;align-items:flex-end}
+.hs-val{font-size:17px;font-weight:700}.hs-lbl{font-size:10px;color:var(--mu)}
+.pt{height:5px;background:var(--s2);border-radius:3px;overflow:hidden;margin-bottom:4px}
+.pf{height:100%;background:var(--a);border-radius:3px;transition:width .5s}
+.pl{display:flex;justify-content:space-between;font-size:10px;color:var(--dim)}
+
+/* TIME INSIGHT WIDGET */
+.time-widget{margin:0 20px 0;border-bottom:1px solid var(--b);padding:12px 0}
+.tw-inner{background:linear-gradient(135deg,#0e1a00,#111);border:1px solid #2a3d00;border-radius:12px;padding:13px}
+.tw-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.tw-time{font-size:11px;letter-spacing:1px;color:var(--a);text-transform:uppercase;flex:1}
+.tw-refresh{background:none;border:1px solid #2a3d00;border-radius:6px;color:var(--a);font-family:"Heebo",sans-serif;font-size:10px;padding:3px 8px;cursor:pointer}
+.tw-refresh:disabled{opacity:.4}
+.tw-msg{font-size:13px;color:#bbb;line-height:1.65}
+.tw-sub{font-size:11px;color:var(--dim);margin-top:6px;border-top:1px solid #1a1a1a;padding-top:6px}
 
 /* MACRO ROW */
-.macro-row{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:12px 20px;border-bottom:1px solid var(--border)}
-.mc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:9px 7px;text-align:center;position:relative;overflow:hidden}
-.mc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;border-radius:0 0 10px 10px}
-.mc.c::after{background:var(--accent)}.mc.p::after{background:var(--blue)}.mc.f::after{background:var(--orange)}.mc.t::after{background:var(--purple)}
-.mc-val{font-size:18px;font-weight:700;line-height:1.1}
-.mc-val.c{color:var(--accent)}.mc-val.p{color:var(--blue)}.mc-val.f{color:var(--orange)}.mc-val.t{color:var(--purple)}
-.mc-tgt{font-size:9px;color:var(--dim);margin-top:1px}
-.mc-lbl{font-size:10px;color:var(--muted);margin-top:2px}
-.mc-bar{height:3px;background:var(--border);border-radius:2px;margin-top:5px;overflow:hidden}
-.mc-bar-fill{height:100%;border-radius:2px;transition:width .4s}
+.mr{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:11px 20px;border-bottom:1px solid var(--b)}
+.mc{background:var(--s);border:1px solid var(--b);border-radius:10px;padding:9px 7px;text-align:center;position:relative;overflow:hidden}
+.mc::after{content:"";position:absolute;bottom:0;left:0;right:0;height:3px;border-radius:0 0 10px 10px}
+.mc.c::after{background:var(--a)}.mc.p::after{background:var(--blue)}.mc.f::after{background:var(--org)}.mc.t::after{background:var(--pur)}
+.mv{font-size:17px;font-weight:700;line-height:1.1}
+.mv.c{color:var(--a)}.mv.p{color:var(--blue)}.mv.f{color:var(--org)}.mv.t{color:var(--pur)}
+.mt{font-size:9px;color:var(--dim);margin-top:1px}.ml{font-size:10px;color:var(--mu);margin-top:2px}
+.mb{height:3px;background:var(--b);border-radius:2px;margin-top:5px;overflow:hidden}
+.mbf{height:100%;border-radius:2px;transition:width .4s}
 
 /* SAMSUNG */
-.sam-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:11px 20px;border-bottom:1px solid var(--border)}
-.sam-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px;display:flex;align-items:center;gap:9px;cursor:pointer}
-.sam-icon{font-size:20px}
-.sam-val{font-size:17px;font-weight:700}
-.sam-val.steps{color:var(--blue)}.sam-val.heart{color:var(--red)}
-.sam-lbl{font-size:10px;color:var(--muted)}
-.sam-sub{font-size:10px;color:var(--dim);margin-top:1px}
+.sr{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 20px;border-bottom:1px solid var(--b)}
+.sc{background:var(--s);border:1px solid var(--b);border-radius:10px;padding:10px;display:flex;align-items:center;gap:9px;cursor:pointer}
+.si{font-size:19px}.sv{font-size:16px;font-weight:700}
+.sv.steps{color:var(--blue)}.sv.heart{color:var(--red)}
+.sl{font-size:10px;color:var(--mu)}.ss{font-size:10px;color:var(--dim);margin-top:1px}
 
 /* TABS */
-.tabs{display:flex;padding:0 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:10;overflow-x:auto}
+.tabs{display:flex;padding:0 20px;border-bottom:1px solid var(--b);position:sticky;top:0;background:var(--bg);z-index:10;overflow-x:auto}
 .tabs::-webkit-scrollbar{display:none}
-.tab-btn{flex-shrink:0;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'Heebo',sans-serif;font-size:11px;padding:10px 8px;cursor:pointer;white-space:nowrap;transition:all .2s}
-.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tb{flex-shrink:0;background:none;border:none;border-bottom:2px solid transparent;color:var(--mu);font-family:"Heebo",sans-serif;font-size:11px;padding:10px 8px;cursor:pointer;white-space:nowrap;transition:all .2s}
+.tb.active{color:var(--a);border-bottom-color:var(--a)}
 
 /* PANES */
-.pane{display:none;padding:15px 20px}
-.pane.active{display:block}
-
-/* SECTION TITLE */
-.sec{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin:16px 0 9px}
-.sec:first-child{margin-top:0}
+.pane{display:none;padding:14px 20px}.pane.active{display:block}
+.sec{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin:15px 0 8px}.sec:first-child{margin-top:0}
 
 /* INPUTS */
-.fld{margin-bottom:11px}
-.fld label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px}
-input[type=number],input[type=text],select,textarea{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Heebo',sans-serif;font-size:15px;padding:10px 12px;outline:none;transition:border-color .2s;-webkit-appearance:none}
-input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+.fld{margin-bottom:10px}.fld label{display:block;font-size:11px;color:var(--mu);margin-bottom:4px}
+input[type=number],input[type=text],select,textarea{width:100%;background:var(--s);border:1px solid var(--b);border-radius:8px;color:var(--tx);font-family:"Heebo",sans-serif;font-size:15px;padding:10px 12px;outline:none;transition:border-color .2s;-webkit-appearance:none}
+input:focus,textarea:focus{border-color:var(--a)}
 textarea{resize:vertical;min-height:70px;font-size:13px;line-height:1.5}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 
 /* BUTTONS */
-.btn{width:100%;background:var(--accent);color:#0d0d0d;border:none;border-radius:8px;font-family:'Heebo',sans-serif;font-size:15px;font-weight:700;padding:12px;cursor:pointer;transition:opacity .2s;margin-top:4px}
+.btn{width:100%;background:var(--a);color:#0d0d0d;border:none;border-radius:8px;font-family:"Heebo",sans-serif;font-size:15px;font-weight:700;padding:12px;cursor:pointer;transition:opacity .2s;margin-top:4px}
 .btn:hover{opacity:.85}.btn:disabled{opacity:.4;cursor:not-allowed}
-.btn-ghost{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Heebo',sans-serif;font-size:13px;padding:9px 14px;cursor:pointer}
+.btn-g{background:var(--s2);border:1px solid var(--b);border-radius:8px;color:var(--tx);font-family:"Heebo",sans-serif;font-size:13px;padding:9px 14px;cursor:pointer}
 
 /* CAMERA */
-.cam-zone{border:2px dashed var(--border);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:border-color .2s;margin-bottom:10px;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px}
-.cam-zone:hover{border-color:var(--accent)}
-.cam-zone.has-img{border-style:solid;border-color:var(--accent);padding:0}
-.cam-zone img{width:100%;max-height:210px;object-fit:cover;border-radius:10px;display:block}
-.cam-icon{font-size:34px}.cam-hint{font-size:13px;color:var(--muted)}.cam-hint2{font-size:11px;color:var(--dim)}
+.cam-zone{border:2px dashed var(--b);border-radius:12px;padding:18px;text-align:center;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;margin-bottom:10px;transition:border-color .2s}
+.cam-zone.has-img{border-style:solid;border-color:var(--a);padding:0}
+.cam-zone img{width:100%;max-height:200px;object-fit:cover;border-radius:10px;display:block}
+.ci{font-size:32px}.ch{font-size:13px;color:var(--mu)}.ch2{font-size:11px;color:var(--dim)}
+.cam-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
+.cam-lbl{display:flex;align-items:center;justify-content:center;gap:6px;border-radius:8px;font-family:"Heebo",sans-serif;font-size:13px;padding:11px;cursor:pointer;text-align:center}
+.cam-lbl.gallery{background:var(--s);border:1px solid var(--b);color:var(--tx)}
+.cam-lbl.camera{background:var(--a);color:#0d0d0d;font-weight:700;border:none}
 
 /* AI RESULT */
-.ai-res{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px;margin-bottom:11px;display:none}
-.ai-res.show{display:block}
-.ai-name{font-size:15px;font-weight:700;margin-bottom:9px}
-.ai-macros{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:11px}
-.ai-m{text-align:center;background:var(--surface2);border-radius:6px;padding:7px 3px}
-.ai-m-val{font-size:14px;font-weight:700}
-.ai-m-lbl{font-size:9px;color:var(--muted);margin-top:2px}
-.ai-note{font-size:12px;color:var(--muted);line-height:1.5;border-top:1px solid var(--border);padding-top:9px}
+.air{background:var(--s);border:1px solid var(--b);border-radius:10px;padding:13px;margin-bottom:10px;display:none}
+.air.show{display:block}
+.ain{font-size:15px;font-weight:700;margin-bottom:9px}
+.aim{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:10px}
+.aim-i{text-align:center;background:var(--s2);border-radius:6px;padding:7px 3px}
+.aim-v{font-size:14px;font-weight:700}.aim-l{font-size:9px;color:var(--mu);margin-top:2px}
+.ai-note{font-size:12px;color:var(--mu);line-height:1.5;border-top:1px solid var(--b);padding-top:9px}
 
-/* QUICK GRID */
-.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:13px}
-.qbtn{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Heebo',sans-serif;font-size:12px;padding:9px 10px;cursor:pointer;text-align:right;line-height:1.4;transition:border-color .15s}
-.qbtn:hover{border-color:var(--accent)}
-.qbtn-meta{display:block;font-size:10px;color:var(--dim);margin-top:2px}
+/* QUICK */
+.qg{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
+.qb{background:var(--s);border:1px solid var(--b);border-radius:8px;color:var(--tx);font-family:"Heebo",sans-serif;font-size:12px;padding:9px 10px;cursor:pointer;text-align:right;line-height:1.4;transition:border-color .15s}
+.qb:hover{border-color:var(--a)}.qb-m{display:block;font-size:10px;color:var(--dim);margin-top:2px}
 
-/* MEALS LIST */
-.meal-item{display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-bottom:1px solid var(--border)}
-.meal-dots{display:flex;flex-direction:column;gap:3px;padding-top:4px}
-.meal-dot{width:5px;height:5px;border-radius:50%}
-.meal-name{font-size:13px;font-weight:500}
-.meal-macro-line{font-size:11px;color:var(--muted);margin-top:2px}
-.meal-kcal{font-size:13px;font-weight:700;color:var(--accent)}
-.meal-del{background:none;border:none;color:var(--dim);cursor:pointer;font-size:14px;padding:2px 4px}
-.meal-del:hover{color:var(--red)}
+/* MEALS */
+.mi{display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-bottom:1px solid var(--b)}
+.mdots{display:flex;flex-direction:column;gap:3px;padding-top:4px}
+.mdot{width:5px;height:5px;border-radius:50%}
+.mn{font-size:13px;font-weight:500}.mm{font-size:11px;color:var(--mu);margin-top:2px}
+.mk{font-size:13px;font-weight:700;color:var(--a)}
+.md{background:none;border:none;color:var(--dim);cursor:pointer;font-size:14px;padding:2px 4px}.md:hover{color:var(--red)}
 
 /* HISTORY */
-.hist-item{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid var(--border)}
-.hist-date{font-size:11px;color:var(--dim);min-width:62px}
-.hist-w{font-size:16px;font-weight:700;flex:1}
-.hist-delta{font-size:12px;font-weight:600}
-.dn{color:var(--accent)}.up{color:var(--red)}.same{color:var(--muted)}
-.hist-note{font-size:11px;color:var(--dim)}
+.hi{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--b)}
+.hd{font-size:11px;color:var(--dim);min-width:62px}.hw{font-size:15px;font-weight:700;flex:1}
+.hdelta{font-size:12px;font-weight:600}.dn{color:var(--a)}.up{color:var(--red)}.same{color:var(--mu)}
+.hn{font-size:11px;color:var(--dim)}
 
 /* CHART */
-.chart-wrap{width:100%;height:130px;margin:10px 0 14px}
+.cw{width:100%;height:130px;margin:10px 0 13px}
 canvas{width:100%!important;height:100%!important}
 
 /* BMI */
-.bmi-bar{height:7px;border-radius:4px;background:linear-gradient(to left,#ff5c5c 0%,#ff8c42 25%,#b5f03d 50%,#ff8c42 75%,#ff5c5c 100%);position:relative;margin:8px 0 16px}
-.bmi-marker{position:absolute;top:-5px;width:17px;height:17px;background:white;border:2px solid var(--bg);border-radius:50%;transform:translateX(50%);transition:right .6s;box-shadow:0 0 0 1px var(--muted)}
-.bmi-lbls{display:flex;justify-content:space-between;font-size:9px;color:var(--dim)}
+.bmi-bar{height:7px;border-radius:4px;background:linear-gradient(to left,#ff5c5c 0%,#ff8c42 25%,#b5f03d 50%,#ff8c42 75%,#ff5c5c 100%);position:relative;margin:8px 0 15px}
+.bmi-m{position:absolute;top:-5px;width:17px;height:17px;background:white;border:2px solid var(--bg);border-radius:50%;transform:translateX(50%);transition:right .6s;box-shadow:0 0 0 1px var(--mu)}
+.bmi-l{display:flex;justify-content:space-between;font-size:9px;color:var(--dim)}
 
 /* SUMMARY */
-.score-wrap{text-align:center;margin-bottom:15px}
-.score-ring-outer{width:110px;height:110px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
-.score-ring-inner{width:82px;height:82px;background:var(--bg);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.score-num{font-size:28px;font-weight:900;line-height:1}
-.score-lbl{font-size:10px;color:var(--muted)}
-.sum-macros{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:13px}
-.sum-mc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px}
-.sum-mc-lbl{font-size:10px;color:var(--muted);margin-bottom:5px}
-.sum-mc-bar-track{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:5px}
-.sum-mc-bar-fill{height:100%;border-radius:3px;transition:width .5s}
-.sum-mc-nums{font-size:11px;display:flex;justify-content:space-between}
-.sum-mc-got{font-weight:700}
-.sum-mc-tgt{color:var(--dim)}
-.advice-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px;margin-bottom:9px}
-.advice-card.good{border-right:3px solid var(--accent)}
-.advice-card.warn{border-right:3px solid var(--orange)}
-.advice-card.bad{border-right:3px solid var(--red)}
-.adv-icon{font-size:18px;margin-bottom:5px}
-.adv-title{font-size:13px;font-weight:700;margin-bottom:3px}
-.adv-body{font-size:12px;color:var(--muted);line-height:1.6}
+.sr-wrap{text-align:center;margin-bottom:14px}
+.score-ring{width:108px;height:108px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 11px}
+.score-inner{width:80px;height:80px;background:var(--bg);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.sn{font-size:28px;font-weight:900;line-height:1}.sl2{font-size:10px;color:var(--mu)}
+.sum-m{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.smc{background:var(--s);border:1px solid var(--b);border-radius:10px;padding:11px}
+.smc-l{font-size:10px;color:var(--mu);margin-bottom:5px}
+.smc-t{height:5px;background:var(--b);border-radius:3px;overflow:hidden;margin-bottom:5px}
+.smc-f{height:100%;border-radius:3px;transition:width .5s}
+.smc-n{font-size:11px;display:flex;justify-content:space-between}
+.smc-g{font-weight:700}.smc-tg{color:var(--dim)}
+.adv{background:var(--s);border:1px solid var(--b);border-radius:10px;padding:12px;margin-bottom:8px}
+.adv.good{border-right:3px solid var(--a)}.adv.warn{border-right:3px solid var(--org)}.adv.bad{border-right:3px solid var(--red)}
+.adv-i{font-size:17px;margin-bottom:4px}.adv-t{font-size:13px;font-weight:700;margin-bottom:3px}
+.adv-b{font-size:12px;color:var(--mu);line-height:1.6}
 
-/* CHARTS TAB */
-.period-row{display:flex;gap:6px;margin-bottom:14px}
-.period-btn{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:20px;color:var(--muted);font-family:'Heebo',sans-serif;font-size:12px;padding:7px 0;cursor:pointer;transition:all .2s}
-.period-btn.active{background:var(--accent);color:#0d0d0d;border-color:var(--accent);font-weight:700}
-.insight-box{background:linear-gradient(135deg,#1a2400,#141414);border:1px solid #3a5a00;border-radius:12px;padding:13px;margin-bottom:13px}
-.insight-hdr{display:flex;align-items:center;gap:8px;margin-bottom:9px}
-.insight-icon{font-size:17px}
-.insight-title{font-size:12px;font-weight:700;color:var(--accent);flex:1}
-.insight-refresh{background:none;border:1px solid #3a5a00;border-radius:6px;color:var(--accent);font-family:'Heebo',sans-serif;font-size:11px;padding:4px 9px;cursor:pointer}
-.insight-refresh:disabled{opacity:.4}
-.insight-body{font-size:13px;color:#aaa;line-height:1.7;min-height:32px}
-.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:13px}
-.kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 7px;text-align:center}
-.kpi-val{font-size:17px;font-weight:700}
-.kpi-lbl{font-size:10px;color:var(--muted);margin-top:2px}
-.kpi-delta{font-size:10px;margin-top:2px}
-.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:13px;margin-bottom:9px}
-.chart-card-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}
-.chart-card-title{font-size:13px;font-weight:700}
-.chart-card-badge{font-size:11px}
-.goal-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px}
-.goal-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
-.goal-card-lbl{font-size:10px;color:var(--muted);margin-bottom:7px}
-.streak-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
-.sday{width:27px;height:27px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700}
-.sday.hit{background:var(--accent);color:#0d0d0d}.sday.miss{background:var(--surface2);color:var(--dim)}
+/* CHARTS */
+.pr{display:flex;gap:6px;margin-bottom:13px}
+.pb{flex:1;background:var(--s);border:1px solid var(--b);border-radius:20px;color:var(--mu);font-family:"Heebo",sans-serif;font-size:12px;padding:7px 0;cursor:pointer;transition:all .2s}
+.pb.active{background:var(--a);color:#0d0d0d;border-color:var(--a);font-weight:700}
+.ib{background:linear-gradient(135deg,#1a2400,#141414);border:1px solid #3a5a00;border-radius:12px;padding:13px;margin-bottom:12px}
+.ib-h{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ib-icon{font-size:17px}.ib-title{font-size:12px;font-weight:700;color:var(--a);flex:1}
+.ib-ref{background:none;border:1px solid #3a5a00;border-radius:6px;color:var(--a);font-family:"Heebo",sans-serif;font-size:11px;padding:4px 9px;cursor:pointer}
+.ib-ref:disabled{opacity:.4}.ib-body{font-size:13px;color:#aaa;line-height:1.7;min-height:30px}
+.kr{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
+.kpi{background:var(--s);border:1px solid var(--b);border-radius:10px;padding:10px 7px;text-align:center}
+.kv{font-size:16px;font-weight:700}.kl{font-size:10px;color:var(--mu);margin-top:2px}.kd{font-size:10px;margin-top:2px}
+.cc{background:var(--s);border:1px solid var(--b);border-radius:12px;padding:13px;margin-bottom:9px}
+.cc-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.cc-t{font-size:13px;font-weight:700}.cc-b{font-size:11px}
+.gg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px}
+.gc{background:var(--s);border:1px solid var(--b);border-radius:10px;padding:12px;text-align:center}
+.gc-l{font-size:10px;color:var(--mu);margin-bottom:6px}
+.stk-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:9px}
+.sd{width:26px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700}
+.sd.hit{background:var(--a);color:#0d0d0d}.sd.miss{background:var(--s2);color:var(--dim)}
 
 /* TIPS */
-.tip{background:var(--surface);border:1px solid var(--border);border-right:3px solid var(--accent);border-radius:8px;padding:13px;margin-bottom:9px}
-.tip-title{font-size:12px;font-weight:700;color:var(--accent);margin-bottom:5px}
-.tip-body{font-size:13px;color:var(--muted);line-height:1.6}
-.tip-body strong{color:var(--text)}
+.tip{background:var(--s);border:1px solid var(--b);border-right:3px solid var(--a);border-radius:8px;padding:12px;margin-bottom:8px}
+.tip-t{font-size:12px;font-weight:700;color:var(--a);margin-bottom:4px}
+.tip-b{font-size:13px;color:var(--mu);line-height:1.6}.tip-b strong{color:var(--tx)}
 
 /* MODAL */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:50;align-items:flex-end;justify-content:center}
-.modal-bg.open{display:flex}
-.modal{background:var(--surface);border-radius:16px 16px 0 0;padding:20px;width:100%;max-width:500px;border-top:1px solid var(--border)}
-.modal-title{font-size:15px;font-weight:700;margin-bottom:13px}
-.modal-close{float:left;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer}
+.mb2{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:50;align-items:flex-end;justify-content:center}
+.mb2.open{display:flex}
+.mo{background:var(--s);border-radius:16px 16px 0 0;padding:20px;width:100%;max-width:500px;border-top:1px solid var(--b)}
+.mo-t{font-size:15px;font-weight:700;margin-bottom:12px}.mo-x{float:left;background:none;border:none;color:var(--mu);font-size:20px;cursor:pointer}
 
 /* LOADING */
-.loading{display:none;position:fixed;inset:0;background:rgba(13,13,13,.85);z-index:100;flex-direction:column;align-items:center;justify-content:center;gap:14px}
-.loading.show{display:flex}
-.spinner{width:42px;height:42px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+.ld{display:none;position:fixed;inset:0;background:rgba(13,13,13,.88);z-index:100;flex-direction:column;align-items:center;justify-content:center;gap:13px}
+.ld.show{display:flex}
+.spin{width:42px;height:42px;border:3px solid var(--b);border-top-color:var(--a);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-txt{font-size:13px;color:var(--muted)}
+.ld-t{font-size:13px;color:var(--mu)}
 
 /* TOAST */
-.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--accent);color:#0d0d0d;font-family:'Heebo',sans-serif;font-weight:700;font-size:13px;padding:10px 22px;border-radius:30px;transition:transform .3s;z-index:200;white-space:nowrap}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--a);color:#0d0d0d;font-family:"Heebo",sans-serif;font-weight:700;font-size:13px;padding:10px 22px;border-radius:30px;transition:transform .3s;z-index:200;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
 
-/* INSTALL BANNER */
-.install-banner{display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;border-top:1px solid var(--border);padding:13px 20px;align-items:center;justify-content:space-between;z-index:300;max-width:500px;margin:0 auto}
-.install-banner.show{display:flex}
+/* INSTALL */
+.inst{display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;border-top:1px solid var(--b);padding:12px 20px;align-items:center;justify-content:space-between;z-index:300;max-width:500px;margin:0 auto}
+.inst.show{display:flex}
 
-/* EMPTY */
-.empty{text-align:center;color:var(--dim);font-size:13px;padding:26px 0}
+.empty{text-align:center;color:var(--dim);font-size:13px;padding:24px 0}
 </style>
 </head>
 <body>
+
+<div class="ver">v3.0</div>
 
 <!-- HEADER -->
 <div class="hdr">
   <div class="hdr-top">
     <div>
       <div class="cw-lbl">משקל נוכחי</div>
-      <div class="cw-val" id="cwVal">90.0<span class="cw-unit"> ק"ג</span></div>
+      <div class="cw-val" id="cwVal">90.0<span class="cw-u"> ק"ג</span></div>
     </div>
-    <div class="hdr-stats">
-      <div><div class="hstat-val" id="hLost" style="color:var(--accent)">0.0 ק"ג</div><div class="hstat-lbl">ירדת</div></div>
-      <div><div class="hstat-val" id="hToGo" style="color:var(--muted)">18.0 ק"ג</div><div class="hstat-lbl">עד יעד</div></div>
+    <div class="hdr-r">
+      <div><div class="hs-val" id="hLost" style="color:var(--a)">0.0 ק"ג</div><div class="hs-lbl">ירדת</div></div>
+      <div><div class="hs-val" id="hToGo" style="color:var(--mu)">18.0 ק"ג</div><div class="hs-lbl">עד יעד</div></div>
     </div>
   </div>
-  <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
-  <div class="prog-lbls"><span>90</span><span id="progPct">0%</span><span>72 ק"ג</span></div>
+  <div class="pt"><div class="pf" id="pf" style="width:0%"></div></div>
+  <div class="pl"><span>90</span><span id="pp">0%</span><span>72 ק"ג</span></div>
+</div>
+
+<!-- TIME INSIGHT WIDGET -->
+<div class="time-widget">
+  <div class="tw-inner">
+    <div class="tw-top">
+      <span class="tw-time" id="twTime">⏰ טוען...</span>
+      <button class="tw-refresh" onclick="loadTimeInsight()" id="twBtn">↻ עדכן</button>
+    </div>
+    <div class="tw-msg" id="twMsg">מחשבת תובנה לפי השעה...</div>
+    <div class="tw-sub" id="twSub"></div>
+  </div>
 </div>
 
 <!-- MACRO ROW -->
-<div class="macro-row">
-  <div class="mc c"><div class="mc-val c" id="mCals">0</div><div class="mc-tgt">/ 1500</div><div class="mc-lbl">קלוריות</div><div class="mc-bar"><div class="mc-bar-fill" id="bCals" style="width:0%;background:var(--accent)"></div></div></div>
-  <div class="mc p"><div class="mc-val p" id="mProt">0</div><div class="mc-tgt">/ 90g</div><div class="mc-lbl">חלבון</div><div class="mc-bar"><div class="mc-bar-fill" id="bProt" style="width:0%;background:var(--blue)"></div></div></div>
-  <div class="mc f"><div class="mc-val f" id="mFib">0</div><div class="mc-tgt">/ 25g</div><div class="mc-lbl">סיבים</div><div class="mc-bar"><div class="mc-bar-fill" id="bFib" style="width:0%;background:var(--orange)"></div></div></div>
-  <div class="mc t"><div class="mc-val t" id="mFat">0</div><div class="mc-tgt">/ 50g</div><div class="mc-lbl">שומן</div><div class="mc-bar"><div class="mc-bar-fill" id="bFat" style="width:0%;background:var(--purple)"></div></div></div>
+<div class="mr">
+  <div class="mc c"><div class="mv c" id="mC">0</div><div class="mt">/ 1500</div><div class="ml">קלוריות</div><div class="mb"><div class="mbf" id="bC" style="width:0%;background:var(--a)"></div></div></div>
+  <div class="mc p"><div class="mv p" id="mP">0</div><div class="mt">/ 90g</div><div class="ml">חלבון</div><div class="mb"><div class="mbf" id="bP" style="width:0%;background:var(--blue)"></div></div></div>
+  <div class="mc f"><div class="mv f" id="mF">0</div><div class="mt">/ 25g</div><div class="ml">סיבים</div><div class="mb"><div class="mbf" id="bF" style="width:0%;background:var(--org)"></div></div></div>
+  <div class="mc t"><div class="mv t" id="mT">0</div><div class="mt">/ 50g</div><div class="ml">שומן</div><div class="mb"><div class="mbf" id="bT" style="width:0%;background:var(--pur)"></div></div></div>
 </div>
 
 <!-- SAMSUNG -->
-<div class="sam-row">
-  <div class="sam-card" onclick="openSam('steps')">
-    <div class="sam-icon">👟</div>
-    <div><div class="sam-val steps" id="sSteps">—</div><div class="sam-lbl">צעדים היום</div><div class="sam-sub" id="sStepsSub">יעד: 8,000</div></div>
-  </div>
-  <div class="sam-card" onclick="openSam('heart')">
-    <div class="sam-icon">❤️</div>
-    <div><div class="sam-val heart" id="sHeart">—</div><div class="sam-lbl">דופק ממוצע</div><div class="sam-sub" id="sHeartSub">bpm</div></div>
-  </div>
+<div class="sr">
+  <div class="sc" onclick="openSam('steps')"><div class="si">👟</div><div><div class="sv steps" id="sS">—</div><div class="sl">צעדים היום</div><div class="ss" id="sSub">יעד: 8,000</div></div></div>
+  <div class="sc" onclick="openSam('heart')"><div class="si">❤️</div><div><div class="sv heart" id="sH">—</div><div class="sl">דופק ממוצע</div><div class="ss" id="hSub">bpm</div></div></div>
 </div>
 
 <!-- TABS -->
 <div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('scan',this)">📸 סריקה</button>
-  <button class="tab-btn" onclick="switchTab('log',this)">🍽 ארוחות</button>
-  <button class="tab-btn" onclick="switchTab('summary',this)">✨ סיכום</button>
-  <button class="tab-btn" onclick="switchTab('charts',this)">📊 גרפים</button>
-  <button class="tab-btn" onclick="switchTab('weight',this)">⚖️ משקל</button>
-  <button class="tab-btn" onclick="switchTab('tips',this)">💡 טיפים</button>
+  <button class="tb active" onclick="switchTab('scan',this)">📸 סריקה</button>
+  <button class="tb" onclick="switchTab('log',this)">🍽 ארוחות</button>
+  <button class="tb" onclick="switchTab('summary',this)">✨ סיכום</button>
+  <button class="tb" onclick="switchTab('charts',this)">📊 גרפים</button>
+  <button class="tb" onclick="switchTab('weight',this)">⚖️ משקל</button>
+  <button class="tb" onclick="switchTab('tips',this)">💡 טיפים</button>
 </div>
 
 <!-- SCAN -->
 <div class="pane active" id="pane-scan">
-  <div class="sec">צלמי ארוחה — AI ינתח</div>
-  <!-- hidden inputs — labels trigger them directly, no JS click() needed -->
-  <input type="file" id="fileIn" accept="image/*" style="display:none" onchange="handleImg(event)">
-  <input type="file" id="fileInCam" accept="image/*" capture="environment" style="display:none" onchange="handleImg(event)">
-
-  <!-- preview zone — not clickable, just shows image -->
+  <div class="sec">סריקת ארוחה — AI מנתח</div>
+  <input type="file" id="fIn" accept="image/*" style="display:none" onchange="handleImg(event)">
+  <input type="file" id="fCam" accept="image/*" capture="environment" style="display:none" onchange="handleImg(event)">
   <div class="cam-zone" id="camZone">
-    <div class="cam-icon">📷</div>
-    <div class="cam-hint">בחרי תמונה לניתוח AI</div>
-    <div class="cam-hint2">קלוריות, חלבון, סיבים, שומן</div>
+    <div class="ci">📷</div>
+    <div class="ch">בחרי תמונת ארוחה</div>
+    <div class="ch2">AI יחשב קלוריות ומאקרו</div>
   </div>
-
-  <!-- label buttons — native file picker, no JS needed -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px">
-    <label for="fileIn" style="display:flex;align-items:center;justify-content:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:Heebo,sans-serif;font-size:13px;padding:11px;cursor:pointer;text-align:center">
-      🖼 מהגלריה
-    </label>
-    <label for="fileInCam" style="display:flex;align-items:center;justify-content:center;gap:6px;background:var(--accent);border:none;border-radius:8px;color:#0d0d0d;font-family:Heebo,sans-serif;font-size:13px;font-weight:700;padding:11px;cursor:pointer;text-align:center">
-      📷 מצלמה
-    </label>
+  <div class="cam-btns">
+    <label for="fIn" class="cam-lbl gallery">🖼 מהגלריה</label>
+    <label for="fCam" class="cam-lbl camera">📷 מצלמה</label>
   </div>
-
   <div style="display:flex;align-items:center;gap:10px;margin:12px 0 10px">
-    <div style="flex:1;height:1px;background:var(--border)"></div>
+    <div style="flex:1;height:1px;background:var(--b)"></div>
     <span style="font-size:11px;color:var(--dim);white-space:nowrap">או כתבי מה אכלת</span>
-    <div style="flex:1;height:1px;background:var(--border)"></div>
+    <div style="flex:1;height:1px;background:var(--b)"></div>
   </div>
-  <div style="position:relative;margin-bottom:11px">
-    <textarea id="txtMeal" placeholder="למשל: 3 בורקסים מיני תפוא, ביצה קשה, 2 כפיות גבינה לבנה, חטיף אפונה" style="padding-left:60px"></textarea>
-    <button onclick="analyzeText()" id="txtBtn" style="position:absolute;left:8px;bottom:8px;background:var(--accent);border:none;border-radius:6px;color:#0d0d0d;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;padding:7px 11px;cursor:pointer">נתח</button>
+  <div style="position:relative;margin-bottom:10px">
+    <textarea id="txtM" placeholder="למשל: 3 בורקסים מיני תפוא, ביצה קשה, 2 כפיות גבינה לבנה" style="padding-left:60px"></textarea>
+    <button onclick="analyzeText()" id="txtBtn" style="position:absolute;left:8px;bottom:8px;background:var(--a);border:none;border-radius:6px;color:#0d0d0d;font-family:Heebo,sans-serif;font-size:13px;font-weight:700;padding:7px 11px;cursor:pointer">נתח</button>
   </div>
-
-  <div class="ai-res" id="aiRes">
-    <div class="ai-name" id="aiName"></div>
-    <div class="ai-macros">
-      <div class="ai-m"><div class="ai-m-val" id="aiC" style="color:var(--accent)">—</div><div class="ai-m-lbl">קלוריות</div></div>
-      <div class="ai-m"><div class="ai-m-val" id="aiP" style="color:var(--blue)">—</div><div class="ai-m-lbl">חלבון g</div></div>
-      <div class="ai-m"><div class="ai-m-val" id="aiF" style="color:var(--orange)">—</div><div class="ai-m-lbl">סיבים g</div></div>
-      <div class="ai-m"><div class="ai-m-val" id="aiT" style="color:var(--purple)">—</div><div class="ai-m-lbl">שומן g</div></div>
+  <div class="air" id="aiR">
+    <div class="ain" id="aiN"></div>
+    <div class="aim">
+      <div class="aim-i"><div class="aim-v" id="aiC" style="color:var(--a)">—</div><div class="aim-l">קלוריות</div></div>
+      <div class="aim-i"><div class="aim-v" id="aiP" style="color:var(--blue)">—</div><div class="aim-l">חלבון g</div></div>
+      <div class="aim-i"><div class="aim-v" id="aiF" style="color:var(--org)">—</div><div class="aim-l">סיבים g</div></div>
+      <div class="aim-i"><div class="aim-v" id="aiT" style="color:var(--pur)">—</div><div class="aim-l">שומן g</div></div>
     </div>
     <div class="ai-note" id="aiNote"></div>
     <button class="btn" onclick="addAiMeal()" style="margin-top:10px">הוסיפי לרישום היום</button>
@@ -311,70 +292,41 @@ canvas{width:100%!important;height:100%!important}
 <!-- LOG -->
 <div class="pane" id="pane-log">
   <div class="sec">ארוחות מהירות</div>
-  <div class="quick-grid" id="quickGrid"></div>
+  <div class="qg" id="qGrid"></div>
   <div class="sec">הוסיפי ידנית</div>
-  <div class="fld"><label>שם הארוחה</label><input type="text" id="manName" placeholder="שניצל + אורז"></div>
-  <div class="row2" style="margin-bottom:8px">
-    <div class="fld"><label>קלוריות</label><input type="number" id="manC" placeholder="350" min="0"></div>
-    <div class="fld"><label>חלבון (g)</label><input type="number" id="manP" placeholder="25" min="0"></div>
-  </div>
-  <div class="row2" style="margin-bottom:11px">
-    <div class="fld"><label>סיבים (g)</label><input type="number" id="manF" placeholder="4" min="0"></div>
-    <div class="fld"><label>שומן (g)</label><input type="number" id="manT" placeholder="12" min="0"></div>
-  </div>
+  <div class="fld"><label>שם הארוחה</label><input type="text" id="maN" placeholder="שניצל + אורז"></div>
+  <div class="r2" style="margin-bottom:8px"><div class="fld"><label>קלוריות</label><input type="number" id="maC" placeholder="350" min="0"></div><div class="fld"><label>חלבון (g)</label><input type="number" id="maP" placeholder="25" min="0"></div></div>
+  <div class="r2" style="margin-bottom:11px"><div class="fld"><label>סיבים (g)</label><input type="number" id="maF" placeholder="4" min="0"></div><div class="fld"><label>שומן (g)</label><input type="number" id="maT" placeholder="12" min="0"></div></div>
   <button class="btn" onclick="addManual()">הוסיפי ארוחה</button>
-  <div class="sec" style="margin-top:18px">ארוחות היום</div>
-  <div id="mealsList"><div class="empty">לא נרשמו ארוחות עדיין</div></div>
+  <div class="sec" style="margin-top:17px">ארוחות היום</div>
+  <div id="mList"><div class="empty">לא נרשמו ארוחות עדיין</div></div>
 </div>
 
 <!-- SUMMARY -->
 <div class="pane" id="pane-summary">
-  <div id="sumContent"><div class="empty">טוענת...</div></div>
-  <div style="margin-top:14px">
-    <button class="btn" onclick="genSummary()" id="sumBtn">✨ קבלי סיכום יומי + עצות AI</button>
-  </div>
-  <div class="ai-res" id="sumAiRes" style="margin-top:13px">
-    <div id="sumAiTxt" style="font-size:14px;line-height:1.8;color:var(--muted);white-space:pre-wrap"></div>
-  </div>
+  <div id="sumC"><div class="empty">טוענת...</div></div>
+  <div style="margin-top:13px"><button class="btn" onclick="genSummary()" id="sumBtn">✨ קבלי סיכום יומי + עצות AI</button></div>
+  <div class="air" id="sumAI" style="margin-top:12px"><div id="sumTxt" style="font-size:14px;line-height:1.8;color:var(--mu);white-space:pre-wrap"></div></div>
 </div>
 
 <!-- CHARTS -->
 <div class="pane" id="pane-charts">
-  <div class="period-row">
-    <button class="period-btn active" onclick="setPeriod(7,this)">7 ימים</button>
-    <button class="period-btn" onclick="setPeriod(14,this)">14 יום</button>
-    <button class="period-btn" onclick="setPeriod(30,this)">30 יום</button>
+  <div class="pr">
+    <button class="pb active" onclick="setPeriod(7,this)">7 ימים</button>
+    <button class="pb" onclick="setPeriod(14,this)">14 יום</button>
+    <button class="pb" onclick="setPeriod(30,this)">30 יום</button>
   </div>
-  <div class="insight-box">
-    <div class="insight-hdr">
-      <span class="insight-icon">🧠</span>
-      <span class="insight-title">תובנת AI</span>
-      <button class="insight-refresh" onclick="loadInsight()" id="insightBtn">↻ רענן</button>
-    </div>
-    <div class="insight-body" id="insightBody">לחצי רענן לתובנה אישית מבוססת הנתונים שלך</div>
+  <div class="ib">
+    <div class="ib-h"><span class="ib-icon">🧠</span><span class="ib-title">תובנת AI</span><button class="ib-ref" onclick="loadInsight()" id="insBtn">↻ רענן</button></div>
+    <div class="ib-body" id="insBody">לחצי רענן לתובנה אישית מבוססת הנתונים שלך</div>
   </div>
-  <div class="kpi-row" id="kpiRow"></div>
-  <div class="chart-card">
-    <div class="chart-card-hdr"><span class="chart-card-title">קלוריות יומיות</span><span class="chart-card-badge" style="color:var(--accent)">יעד 1,500</span></div>
-    <div style="height:130px"><canvas id="cCals"></canvas></div>
-  </div>
-  <div class="chart-card">
-    <div class="chart-card-hdr">
-      <span class="chart-card-title">חלבון וסיבים</span>
-      <div style="display:flex;gap:8px;font-size:10px"><span style="color:var(--blue)">■ חלבון</span><span style="color:var(--orange)">■ סיבים</span></div>
-    </div>
-    <div style="height:130px"><canvas id="cMacro"></canvas></div>
-  </div>
-  <div class="chart-card">
-    <div class="chart-card-hdr"><span class="chart-card-title">מגמת משקל</span><span class="chart-card-badge" id="wtBadge"></span></div>
-    <div style="height:130px"><canvas id="cWeight"></canvas></div>
-  </div>
+  <div class="kr" id="kpiR"></div>
+  <div class="cc"><div class="cc-h"><span class="cc-t">קלוריות יומיות</span><span class="cc-b" style="color:var(--a)">יעד 1,500</span></div><div style="height:130px"><canvas id="cCals"></canvas></div></div>
+  <div class="cc"><div class="cc-h"><span class="cc-t">חלבון וסיבים</span><div style="display:flex;gap:8px;font-size:10px"><span style="color:var(--blue)">■ חלבון</span><span style="color:var(--org)">■ סיבים</span></div></div><div style="height:130px"><canvas id="cMacro"></canvas></div></div>
+  <div class="cc"><div class="cc-h"><span class="cc-t">מגמת משקל</span><span class="cc-b" id="wtB"></span></div><div style="height:130px"><canvas id="cWt"></canvas></div></div>
   <div class="sec">השגת יעדים — ממוצע תקופה</div>
-  <div class="goal-grid" id="goalGrid"></div>
-  <div class="chart-card" style="margin-top:9px">
-    <div class="chart-card-hdr"><span class="chart-card-title">🔥 רצף ימים</span></div>
-    <div id="streakBox"></div>
-  </div>
+  <div class="gg" id="gGrid"></div>
+  <div class="cc" style="margin-top:8px"><div class="cc-h"><span class="cc-t">🔥 רצף ימים</span></div><div id="stkBox"></div></div>
 </div>
 
 <!-- WEIGHT -->
@@ -383,177 +335,244 @@ canvas{width:100%!important;height:100%!important}
   <div class="fld"><label>משקל (ק"ג)</label><input type="number" id="wIn" placeholder="89.5" step="0.1" min="40" max="200"></div>
   <div class="fld"><label>הערה</label><input type="text" id="wNote" placeholder="אחרי אימון, בוקר..."></div>
   <button class="btn" onclick="logWeight()">שמור שקילה</button>
-  <div class="sec" style="margin-top:18px">גרף משקל</div>
-  <div class="chart-wrap"><canvas id="wChart"></canvas></div>
+  <div class="sec" style="margin-top:17px">גרף משקל</div>
+  <div class="cw"><canvas id="wChart"></canvas></div>
   <div class="sec">BMI</div>
-  <div class="bmi-bar"><div class="bmi-marker" id="bmiM" style="right:38%"></div></div>
-  <div class="bmi-lbls"><span>תת-משקל</span><span>תקין</span><span>עודף</span><span>השמנה</span></div>
-  <p style="font-size:12px;color:var(--muted);margin-top:10px" id="bmiTxt"></p>
+  <div class="bmi-bar"><div class="bmi-m" id="bmiM" style="right:38%"></div></div>
+  <div class="bmi-l"><span>תת-משקל</span><span>תקין</span><span>עודף</span><span>השמנה</span></div>
+  <p style="font-size:12px;color:var(--mu);margin-top:10px" id="bmiTxt"></p>
+  <div class="sec" style="margin-top:17px">היסטוריה</div>
+  <div id="histL"><div class="empty">עדיין אין שקילות</div></div>
+  <div style="margin-top:16px;text-align:center"><button class="btn-g" onclick="if(confirm('למחוק הכל?'))clearAll()">איפוס נתונים</button></div>
 </div>
 
 <!-- TIPS -->
 <div class="pane" id="pane-tips">
   <div class="sec">מותאם לך — אמא עם שניים קטנים</div>
-  <div class="tip"><div class="tip-title">יעדי המאקרו שלך</div><div class="tip-body"><strong>1,500 קלוריה</strong> = גירעון 500, ירידה 0.5 ק"ג בשבוע.<br><strong>90g חלבון</strong> — קריטי לשמירת שריר עם פילאטיס וכוח.<br><strong>25g סיבים</strong> — שובע, עיכול, ויסות סוכר.<br><strong>50g שומן</strong> — חיוני לאיזון הורמונלי.</div></div>
-  <div class="tip"><div class="tip-title">חלבון בלי לבשל</div><div class="tip-body">קוטג' 5% (100g) = <strong>11g חלבון, 105 קל'</strong><br>ביצה קשה = <strong>6g חלבון, 70 קל'</strong><br>טונה בשימור = <strong>20g חלבון, 100 קל'</strong><br>יוגורט יווני 0% (200g) = <strong>18g חלבון, 120 קל'</strong></div></div>
-  <div class="tip"><div class="tip-title">צעדים ושעון</div><div class="tip-body"><strong>8,000 צעדים</strong> = 250-300 קל' נוספות שרופות.<br>דופק מנוחה מעל 75 = שינה ומתח משפיעים על הירידה לא פחות מהאוכל.</div></div>
-  <div class="tip"><div class="tip-title">כלל הלילה</div><div class="tip-body">אחרי שהילדים נרדמו — הסכנה הגדולה. הכיני: <strong>יוגורט יווני + תות</strong> = 150 קל', 16g חלבון. שמי בקדמת המקרר.</div></div>
-  <div class="tip"><div class="tip-title">ציר הזמן שלך</div><div class="tip-body">18 ק"ג בקצב 0.5/שבוע = <strong>36 שבועות</strong>. לא לחץ. לא מהירות. רק עקביות.</div></div>
+  <div class="tip"><div class="tip-t">יעדי המאקרו שלך</div><div class="tip-b"><strong>1,500 קלוריה</strong> = גירעון 500, ירידה 0.5 ק"ג בשבוע.<br><strong>90g חלבון</strong> — קריטי לשמירת שריר עם פילאטיס וכוח.<br><strong>25g סיבים</strong> — שובע, עיכול, ויסות סוכר.<br><strong>50g שומן</strong> — חיוני לאיזון הורמונלי.</div></div>
+  <div class="tip"><div class="tip-t">חלבון בלי לבשל</div><div class="tip-b">קוטג' 5% (100g) = <strong>11g / 105 קל'</strong><br>ביצה קשה = <strong>6g / 70 קל'</strong><br>טונה בשימור = <strong>20g / 100 קל'</strong><br>יוגורט יווני 0% (200g) = <strong>18g / 120 קל'</strong></div></div>
+  <div class="tip"><div class="tip-t">צעדים ושעון</div><div class="tip-b"><strong>8,000 צעדים</strong> = 250-300 קל' נוספות. דופק מנוחה מעל 75 — שינה ומתח משפיעים על הירידה לא פחות מהאוכל.</div></div>
+  <div class="tip"><div class="tip-t">כלל הלילה</div><div class="tip-b">אחרי שהילדים נרדמו — הסכנה הגדולה. הכיני: <strong>יוגורט יווני + תות</strong> = 150 קל', 16g חלבון. שמי בקדמת המקרר.</div></div>
+  <div class="tip"><div class="tip-t">ציר הזמן שלך</div><div class="tip-b">18 ק"ג בקצב 0.5/שבוע = <strong>36 שבועות</strong>. לא לחץ. רק עקביות.</div></div>
 </div>
 
-<!-- MODALS -->
-<div class="modal-bg" id="samModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeSam()">✕</button>
-    <div class="modal-title" id="samTitle">הזיני נתון</div>
-    <div class="fld"><label id="samLbl">ערך</label><input type="number" id="samIn" placeholder="0"></div>
+<!-- MODAL -->
+<div class="mb2" id="samMod">
+  <div class="mo">
+    <button class="mo-x" onclick="closeSam()">✕</button>
+    <div class="mo-t" id="samT">הזיני נתון</div>
+    <div class="fld"><label id="samL">ערך</label><input type="number" id="samIn" placeholder="0"></div>
     <button class="btn" onclick="saveSam()">שמור</button>
   </div>
 </div>
 
-<div class="loading" id="loading"><div class="spinner"></div><div class="loading-txt" id="loadingTxt">מנתח...</div></div>
+<div class="ld" id="ld"><div class="spin"></div><div class="ld-t" id="ldTxt">מנתח...</div></div>
 <div class="toast" id="toast"></div>
 
-<div class="install-banner" id="installBanner">
-  <div><div style="font-size:14px;font-weight:700">הוסיפי לדף הבית 📱</div><div style="font-size:11px;color:var(--muted);margin-top:2px">גישה מהירה כמו אפליקציה</div></div>
+<div class="inst" id="inst">
+  <div><div style="font-size:14px;font-weight:700">הוסיפי לדף הבית 📱</div><div style="font-size:11px;color:var(--mu);margin-top:2px">גישה מהירה כמו אפליקציה</div></div>
   <div style="display:flex;gap:7px">
-    <button onclick="document.getElementById('installBanner').classList.remove('show')" class="btn-ghost" style="font-size:12px;padding:7px 11px">אחר כך</button>
-    <button onclick="installApp()" style="background:var(--accent);border:none;border-radius:7px;color:#0d0d0d;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;padding:8px 14px;cursor:pointer">התקיני</button>
+    <button onclick="document.getElementById('inst').classList.remove('show')" class="btn-g" style="font-size:12px;padding:7px 11px">אחר כך</button>
+    <button onclick="installApp()" style="background:var(--a);border:none;border-radius:7px;color:#0d0d0d;font-family:Heebo,sans-serif;font-size:13px;font-weight:700;padding:8px 14px;cursor:pointer">התקיני</button>
   </div>
 </div>
 
 <script>
-// ── STATE ──
-const START=90, TARGET=72, H=1.72;
+const VER="3.0",START=90,TARGET=72,HT=1.72;
 const TGT={cals:1500,prot:90,fib:25,fat:50};
-
-let S = JSON.parse(localStorage.getItem('hf2') || 'null') || {weights:[],meals:[],sam:{steps:null,heart:null}};
-function save(){localStorage.setItem('hf2',JSON.stringify(S))}
+let S=JSON.parse(localStorage.getItem("hf3")||"null")||{weights:[],meals:[],sam:{steps:null,heart:null}};
+function save(){localStorage.setItem("hf3",JSON.stringify(S))}
 function today(){return new Date().toISOString().slice(0,10)}
 function todayMeals(){const t=today();return S.meals.filter(m=>m.date===t)}
+function toast(m){const e=document.getElementById("toast");e.textContent=m;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),2200)}
+function showLd(t="מנתח..."){document.getElementById("ldTxt").textContent=t;document.getElementById("ld").classList.add("show")}
+function hideLd(){document.getElementById("ld").classList.remove("show")}
 
-// ── TOAST ──
-function toast(msg){const e=document.getElementById('toast');e.textContent=msg;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2200)}
+// ── TIME INSIGHT ──
+function getTimeContext(){
+  const h=new Date().getHours();
+  const mins=new Date().getMinutes();
+  const timeStr=(h<10?"0"+h:h)+":"+(mins<10?"0"+mins:mins);
+  let period,emoji;
+  if(h>=5&&h<9){period="בוקר מוקדם";emoji="🌅"}
+  else if(h>=9&&h<11){period="בוקר";emoji="☀️"}
+  else if(h>=11&&h<13){period="לפני צהריים";emoji="🌤"}
+  else if(h>=13&&h<15){period="צהריים";emoji="🌞"}
+  else if(h>=15&&h<17){period="אחר הצהריים";emoji="🍵"}
+  else if(h>=17&&h<19){period="שעת האיסוף";emoji="🏃"}
+  else if(h>=19&&h<21){period="ערב";emoji="🌆"}
+  else if(h>=21&&h<23){period="לילה";emoji="🌙"}
+  else{period="לילה מאוחר";emoji="😴"}
+  return{h,timeStr,period,emoji}
+}
 
-// ── LOADING ──
-function showLoad(txt='מנתח...'){document.getElementById('loadingTxt').textContent=txt;document.getElementById('loading').classList.add('show')}
-function hideLoad(){document.getElementById('loading').classList.remove('show')}
+function getLocalTimeInsight(){
+  const meals=todayMeals();
+  const tot={cals:0,prot:0,fib:0,fat:0};
+  meals.forEach(m=>{tot.cals+=m.cals||0;tot.prot+=m.prot||0;tot.fib+=m.fib||0;tot.fat+=m.fat||0});
+  const {h,period,emoji}=getTimeContext();
+  const rem=TGT.cals-tot.cals;
+  const remP=TGT.prot-tot.prot;
+  let msg="",sub="";
 
-// ── TABS ──
-function switchTab(id,btn){
-  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('pane-'+id).classList.add('active');
-  btn.classList.add('active');
-  if(id==='summary') renderSummary();
-  if(id==='charts') initCharts();
-  if(id==='log') renderMeals();
-  if(id==='weight') drawWChart();
+  if(h>=5&&h<9){
+    if(meals.length===0){msg="בוקר טוב! עדיין לא תיעדת ארוחת בוקר. ארוחת בוקר עשירה בחלבון תשמור אותך שבעה עד הצהריים ותמנע נשנושים.";sub="המלצה: יוגורט יווני + ביצה קשה = 190 קל', 24g חלבון"}
+    else{msg="כל הכבוד — כבר תיעדת ארוחת בוקר! התחלה טובה ליום מצוין.";sub="המשיכי לשתות מים לפני כל ארוחה"}
+  } else if(h>=9&&h<11){
+    if(tot.prot<20){msg="שעת ביניים — אם מרגישה רעב, הגיע הזמן לחטיף חלבון קטן. זה ימנע אכילת יתר בצהריים.";sub="אפשרות: קוטג' קטן (11g חלבון, 105 קל')"}
+    else{msg="ממשיכה טוב! החלבון שאכלת כבר שומר אותך שבעה. עוד "+Math.round(remP)+"g חלבון ליעד היום.";sub="שתי מים — לפעמים רעב הוא למעשה צמא"}
+  } else if(h>=11&&h<13){
+    msg="מתקרבת לצהריים — תכנני ארוחת צהריים עם חלבון ולא רק פחמימות. זה הזמן הכי חשוב ביום.";
+    sub=tot.cals<400?"עדיין יש לך "+Math.round(rem)+" קל' — מספיק לארוחה מלאה":"אכלת "+Math.round(tot.cals)+" קל' עד כה — קחי עוד "+Math.round(rem)+" לצהריים"
+  } else if(h>=13&&h<15){
+    if(rem>600){msg="ארוחת הצהריים עוד לפניך? נשארו לך "+Math.round(rem)+" קל' — ניתן לארוחה מלאה ומזינה.";sub="טונה + פיתה + סלט = ~380 קל', 30g חלבון"}
+    else{msg="מחצית היום מאחוריך. עד כה: "+Math.round(tot.cals)+" קל', "+Math.round(tot.prot)+"g חלבון.";sub="נשארו "+Math.round(rem)+" קל' לשארית היום"}
+  } else if(h>=15&&h<17){
+    msg="שעת האנרגיה הנמוכה של אחר הצהריים. אם מרגישה רעב — עדיף חטיף חלבון על פני פחמימות.";
+    sub=remP>30?"עוד "+Math.round(remP)+"g חלבון ליעד — חופן אגוזים או גבינה לבנה":"כמעט הגעת ליעד החלבון!"
+  } else if(h>=17&&h<19){
+    msg="שעת האיסוף והתנועה — אל תאכלי בזריזות. אם רעבה, חטיף קטן עד ארוחת הערב.";
+    sub="הוסיפי את נתוני הצעדים מ-Samsung Health"
+  } else if(h>=19&&h<21){
+    if(rem>400){msg="ארוחת ערב — נשארו לך "+Math.round(rem)+" קל'. מספיק לארוחה מלאה ומשביעה!";sub="טיפ: אכלי לאט, ללא מסכים — אוכלים פחות כשמרוכזים"}
+    else if(rem>0){msg="ערב טוב! נשארו "+Math.round(rem)+" קל' — ארוחה קלה בלבד.";sub="יוגורט יווני + פרי = ארוחת ערב מושלמת"}
+    else{msg="הגעת ליעד הקלוריות להיום — עשית עבודה מצוינת!";sub="אם רעבה: כוס מים + ירק גולמי בלי קלוריות"}
+  } else if(h>=21&&h<23){
+    msg="שעת הסכנה — אחרי שהילדים נרדמו. אם מרגישה רעב, זה לרוב עייפות או שעמום.";
+    sub=rem>0?"נשארו "+Math.round(rem)+" קל' אם באמת רעבה":"כבר הגעת ליעד. כוס תה וללכת לישון 💪"
+  } else {
+    msg="שעה מאוחרת — הגוף מתקשה לעכל לפני שינה. אם חייבת לאכול, רק חלבון קל.";
+    sub="שינה טובה = ירידה במשקל. לכי לישון!"
+  }
+  return{msg,sub,period,emoji}
+}
+
+async function loadTimeInsight(){
+  const btn=document.getElementById("twBtn");
+  btn.disabled=true;
+  const {h,timeStr,period,emoji}=getTimeContext();
+  document.getElementById("twTime").textContent=emoji+" "+period+" · "+timeStr;
+  const meals=todayMeals();
+  const tot={cals:0,prot:0,fib:0,fat:0};
+  meals.forEach(m=>{tot.cals+=m.cals||0;tot.prot+=m.prot||0;tot.fib+=m.fib||0;tot.fat+=m.fat||0});
+
+  // First show local instant insight
+  const local=getLocalTimeInsight();
+  document.getElementById("twMsg").textContent=local.msg;
+  document.getElementById("twSub").textContent=local.sub;
+  btn.disabled=false;
+
+  // Then try AI enhancement in background (no loading overlay)
+  try{
+    const cw=S.weights.length?S.weights[S.weights.length-1].w:90;
+    const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:200,messages:[{role:"user",content:"דיאטנית ישראלית. תובנה קצרה ומעשית (2 משפטים, עברית) לאמא ב-41 שמנסה לרדת במשקל. שעה: "+timeStr+" ("+period+"). משקל: "+cw+" קג, יעד 72. היום: "+Math.round(tot.cals)+" קל (יעד 1500), "+Math.round(tot.prot)+"g חלבון (יעד 90g). "+meals.length+" ארוחות. מה הכי חשוב לה לעשות עכשיו?"}]})});
+    const d=await res.json();
+    const txt=d.content?.[0]?.text||"";
+    if(txt)document.getElementById("twMsg").textContent=txt;
+  }catch(e){/* keep local insight */}
+}
+
+function updateTimeWidget(){
+  const {timeStr,period,emoji}=getTimeContext();
+  document.getElementById("twTime").textContent=emoji+" "+period+" · "+timeStr;
+  const local=getLocalTimeInsight();
+  document.getElementById("twMsg").textContent=local.msg;
+  document.getElementById("twSub").textContent=local.sub;
 }
 
 // ── HEADER ──
 function updateHeader(){
-  const cw=S.weights.length ? S.weights[S.weights.length-1].w : START;
-  const lost=Math.max(0,START-cw), toGo=Math.max(0,cw-TARGET);
+  const cw=S.weights.length?S.weights[S.weights.length-1].w:START;
+  const lost=Math.max(0,START-cw),toGo=Math.max(0,cw-TARGET);
   const pct=Math.min(100,(lost/(START-TARGET))*100);
-  const bmi=cw/(H*H);
-  document.getElementById('cwVal').innerHTML=cw.toFixed(1)+'<span class="cw-unit"> ק"ג</span>';
-  document.getElementById('hLost').textContent=lost.toFixed(1)+' ק"ג';
-  document.getElementById('hToGo').textContent=toGo.toFixed(1)+' ק"ג';
-  document.getElementById('progFill').style.width=pct.toFixed(1)+'%';
-  document.getElementById('progPct').textContent=pct.toFixed(0)+'%';
-  const bmiPct=Math.max(5,Math.min(95,95-((bmi-16)/24)*90));
-  document.getElementById('bmiM').style.right=bmiPct.toFixed(0)+'%';
-  document.getElementById('bmiTxt').textContent='BMI נוכחי: '+bmi.toFixed(1)+' · יעד: '+((TARGET/(H*H)).toFixed(1))+' (תקין 18.5–24.9)';
-  updateMacros();
-  updateSam();
+  const bmi=cw/(HT*HT);
+  document.getElementById('cwVal').innerHTML=`${cw.toFixed(1)}<span class='cw-u'> ק"ג</span>`;
+  document.getElementById("hLost").textContent=lost.toFixed(1)+" ק\"ג";
+  document.getElementById("hToGo").textContent=toGo.toFixed(1)+" ק\"ג";
+  document.getElementById("pf").style.width=pct.toFixed(1)+"%";
+  document.getElementById("pp").textContent=pct.toFixed(0)+"%";
+  const bmiP=Math.max(5,Math.min(95,95-((bmi-16)/24)*90));
+  document.getElementById("bmiM").style.right=bmiP.toFixed(0)+"%";
+  document.getElementById("bmiTxt").textContent="BMI נוכחי: "+bmi.toFixed(1)+" · יעד: "+((TARGET/(HT*HT)).toFixed(1))+" (תקין 18.5–24.9)";
+  updateMacros();updateSam();
 }
 
 // ── MACROS ──
 function updateMacros(){
-  const meals=todayMeals();
-  const tot={cals:0,prot:0,fib:0,fat:0};
+  const meals=todayMeals(),tot={cals:0,prot:0,fib:0,fat:0};
   meals.forEach(m=>{tot.cals+=m.cals||0;tot.prot+=m.prot||0;tot.fib+=m.fib||0;tot.fat+=m.fat||0});
-  const ids={cals:'mCals',prot:'mProt',fib:'mFib',fat:'mFat'};
-  const bars={cals:'bCals',prot:'bProt',fib:'bFib',fat:'bFat'};
-  const keys={cals:'cals',prot:'prot',fib:'fib',fat:'fat'};
-  Object.keys(ids).forEach(k=>{
-    document.getElementById(ids[k]).textContent=Math.round(tot[k]);
-    document.getElementById(bars[k]).style.width=Math.min(100,(tot[k]/TGT[keys[k]])*100).toFixed(0)+'%';
+  [["cals","mC","bC",1500],["prot","mP","bP",90],["fib","mF","bF",25],["fat","mT","bT",50]].forEach(([k,vi,bi,tg])=>{
+    document.getElementById(vi).textContent=Math.round(tot[k]);
+    document.getElementById(bi).style.width=Math.min(100,(tot[k]/tg)*100).toFixed(0)+"%";
   });
 }
 
 // ── SAMSUNG ──
-let samMode='steps';
-function openSam(mode){
-  samMode=mode;
-  document.getElementById('samTitle').textContent=mode==='steps'?'הזיני צעדים מ-Samsung Health':'הזיני דופק מ-Samsung Health';
-  document.getElementById('samLbl').textContent=mode==='steps'?'מספר צעדים':'דופק ממוצע (bpm)';
-  document.getElementById('samIn').placeholder=mode==='steps'?'7500':'72';
-  document.getElementById('samIn').value='';
-  document.getElementById('samModal').classList.add('open');
-}
-function closeSam(){document.getElementById('samModal').classList.remove('open')}
-function saveSam(){
-  const v=parseInt(document.getElementById('samIn').value);
-  if(!v||v<0){alert('ערך לא תקין');return}
-  S.sam[samMode]=v;save();closeSam();updateSam();toast('✓ נשמר');
-}
+let samMode="steps";
+function openSam(m){samMode=m;document.getElementById("samT").textContent=m==="steps"?"הזיני צעדים":"הזיני דופק";document.getElementById("samL").textContent=m==="steps"?"מספר צעדים":"דופק ממוצע (bpm)";document.getElementById("samIn").placeholder=m==="steps"?"7500":"72";document.getElementById("samIn").value="";document.getElementById("samMod").classList.add("open")}
+function closeSam(){document.getElementById("samMod").classList.remove("open")}
+function saveSam(){const v=parseInt(document.getElementById("samIn").value);if(!v||v<0){alert("ערך לא תקין");return}S.sam[samMode]=v;save();closeSam();updateSam();toast("✓ נשמר")}
 function updateSam(){
-  if(S.sam.steps){document.getElementById('sSteps').textContent=S.sam.steps.toLocaleString();document.getElementById('sStepsSub').textContent=Math.round((S.sam.steps/8000)*100)+'% מהיעד'}
-  if(S.sam.heart){document.getElementById('sHeart').textContent=S.sam.heart+' bpm';const z=S.sam.heart<60?'מצוין':S.sam.heart<75?'תקין':S.sam.heart<90?'גבוה מעט':'גבוה';document.getElementById('sHeartSub').textContent=z}
+  if(S.sam.steps){document.getElementById("sS").textContent=S.sam.steps.toLocaleString();document.getElementById("sSub").textContent=Math.round((S.sam.steps/8000)*100)+"% מהיעד"}
+  if(S.sam.heart){document.getElementById("sH").textContent=S.sam.heart+" bpm";document.getElementById("hSub").textContent=S.sam.heart<60?"מצוין":S.sam.heart<75?"תקין":S.sam.heart<90?"גבוה מעט":"גבוה"}
+}
+
+// ── TABS ──
+function switchTab(id,btn){
+  document.querySelectorAll(".pane").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".tb").forEach(b=>b.classList.remove("active"));
+  document.getElementById("pane-"+id).classList.add("active");
+  btn.classList.add("active");
+  if(id==="summary")renderSummary();
+  if(id==="charts")initCharts();
+  if(id==="log")renderMeals();
+  if(id==="weight"){drawWChart();renderHistory()}
 }
 
 // ── WEIGHT ──
 function logWeight(){
-  const w=parseFloat(document.getElementById('wIn').value);
-  if(!w||w<40||w>200){alert('הכניסי משקל תקין');return}
-  const note=document.getElementById('wNote').value.trim();
-  const t=today();
+  const w=parseFloat(document.getElementById("wIn").value);
+  if(!w||w<40||w>200){alert("הכניסי משקל תקין");return}
+  const note=document.getElementById("wNote").value.trim(),t=today();
   const idx=S.weights.findIndex(x=>x.date===t);
-  const entry={date:t,w,note};
-  if(idx>=0)S.weights[idx]=entry; else S.weights.push(entry);
+  if(idx>=0)S.weights[idx]={date:t,w,note};else S.weights.push({date:t,w,note});
   S.weights.sort((a,b)=>a.date.localeCompare(b.date));
-  save();document.getElementById('wIn').value='';document.getElementById('wNote').value='';
-  updateHeader();drawWChart();toast('✓ '+w+' ק"ג נשמר');
+  save();document.getElementById("wIn").value="";document.getElementById("wNote").value="";
+  updateHeader();drawWChart();renderHistory();toast("✓ "+w+" ק\"ג נשמר");
 }
+function renderHistory(){
+  const el=document.getElementById("histL");if(!el)return;
+  if(!S.weights.length){el.innerHTML='<div class="empty">עדיין אין שקילות</div>';return}
+  el.innerHTML=[...S.weights].reverse().map((w,i,arr)=>{
+    const prev=arr[i+1];let dlt="";
+    if(prev){const d=w.w-prev.w;dlt=d<-0.05?`<span class="hdelta dn">▼ ${Math.abs(d).toFixed(1)}</span>`:d>0.05?`<span class="hdelta up">▲ ${d.toFixed(1)}</span>`:`<span class="hdelta same">—</span>`}
+        return `<div class="hi"><span class="hd">${w.date.split("-").reverse().join(".")}</span><span class="hw">${w.w.toFixed(1)} ק"ג</span>${dlt}${w.note?`<span class="hn">${w.note}</span>`:""}</div>`
+  }).join("")
+}
+function clearAll(){S={weights:[],meals:[],sam:{steps:null,heart:null}};save();updateHeader();drawWChart();renderHistory();renderMeals();toast("✓ אופס")}
 
 // ── WEIGHT CHART ──
 function drawWChart(){
-  const canvas=document.getElementById('wChart');if(!canvas)return;
-  const dpr=window.devicePixelRatio||1,W=canvas.offsetWidth||440,H2=canvas.offsetHeight||130;
-  canvas.width=W*dpr;canvas.height=H2*dpr;
-  const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);ctx.clearRect(0,0,W,H2);
+  const cv=document.getElementById("wChart");if(!cv)return;
+  const dpr=window.devicePixelRatio||1,W=cv.offsetWidth||440,H=cv.offsetHeight||130;
+  cv.width=W*dpr;cv.height=H*dpr;
+  const ctx=cv.getContext("2d");ctx.scale(dpr,dpr);ctx.clearRect(0,0,W,H);
   const ws=S.weights;
-  if(ws.length<2){ctx.fillStyle='#444';ctx.font='13px Heebo';ctx.textAlign='center';ctx.fillText('נדרשות לפחות 2 שקילות לגרף',W/2,H2/2);return}
-  const vals=ws.map(w=>w.w);
-  const minV=Math.min(...vals,TARGET)-0.5,maxV=Math.max(...vals)+0.5;
-  const pad={t:12,b:22,l:8,r:8},cw2=W-pad.l-pad.r,ch=H2-pad.t-pad.b;
-  const toX=i=>pad.l+(i/(ws.length-1))*cw2, toY=v=>pad.t+((maxV-v)/(maxV-minV))*ch;
+  if(ws.length<2){ctx.fillStyle="#444";ctx.font="13px Heebo";ctx.textAlign="center";ctx.fillText("נדרשות לפחות 2 שקילות לגרף",W/2,H/2);return}
+  const vals=ws.map(w=>w.w),minV=Math.min(...vals,TARGET)-0.5,maxV=Math.max(...vals)+0.5;
+  const pad={t:12,b:22,l:8,r:8},cw2=W-pad.l-pad.r,ch=H-pad.t-pad.b;
+  const toX=i=>pad.l+(i/(ws.length-1))*cw2,toY=v=>pad.t+((maxV-v)/(maxV-minV))*ch;
   const ty=toY(TARGET);
-  ctx.setLineDash([3,3]);ctx.strokeStyle='#2a2a2a';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(pad.l,ty);ctx.lineTo(W-pad.r,ty);ctx.stroke();ctx.setLineDash([]);
-  ctx.fillStyle='#333';ctx.font='9px Heebo';ctx.textAlign='left';ctx.fillText('72 יעד',pad.l+2,ty-3);
-  const grad=ctx.createLinearGradient(0,pad.t,0,H2-pad.b);
-  grad.addColorStop(0,'rgba(181,240,61,0.2)');grad.addColorStop(1,'rgba(181,240,61,0)');
+  ctx.setLineDash([3,3]);ctx.strokeStyle="#2a2a2a";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,ty);ctx.lineTo(W-pad.r,ty);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle="#333";ctx.font="9px Heebo";ctx.textAlign="left";ctx.fillText("72 יעד",pad.l+2,ty-3);
+  const gr=ctx.createLinearGradient(0,pad.t,0,H-pad.b);gr.addColorStop(0,"rgba(181,240,61,0.2)");gr.addColorStop(1,"rgba(181,240,61,0)");
   ctx.beginPath();ws.forEach((w,i)=>i===0?ctx.moveTo(toX(i),toY(w.w)):ctx.lineTo(toX(i),toY(w.w)));
-  ctx.lineTo(toX(ws.length-1),H2-pad.b);ctx.lineTo(toX(0),H2-pad.b);ctx.closePath();ctx.fillStyle=grad;ctx.fill();
+  ctx.lineTo(toX(ws.length-1),H-pad.b);ctx.lineTo(toX(0),H-pad.b);ctx.closePath();ctx.fillStyle=gr;ctx.fill();
   ctx.beginPath();ws.forEach((w,i)=>i===0?ctx.moveTo(toX(i),toY(w.w)):ctx.lineTo(toX(i),toY(w.w)));
-  ctx.strokeStyle='#b5f03d';ctx.lineWidth=2.5;ctx.lineJoin='round';ctx.stroke();
-  ws.forEach((w,i)=>{ctx.beginPath();ctx.arc(toX(i),toY(w.w),4,0,Math.PI*2);ctx.fillStyle='#b5f03d';ctx.fill();ctx.beginPath();ctx.arc(toX(i),toY(w.w),2,0,Math.PI*2);ctx.fillStyle='#0d0d0d';ctx.fill()});
-  ctx.fillStyle='#444';ctx.font='8px Heebo';ctx.textAlign='center';
-  ws.forEach((w,i)=>{if(ws.length<=7||i===0||i===ws.length-1)ctx.fillText(w.date.slice(5).split('-').reverse().join('/'),toX(i),H2-pad.b+13)});
-}
-
-// ── HISTORY (inside weight pane, if needed) ──
-function renderHistory(){
-  const el=document.getElementById('histList');if(!el)return;
-  if(!S.weights.length){el.innerHTML='<div class="empty">עדיין אין שקילות</div>';return}
-  el.innerHTML=[...S.weights].reverse().map((w,i,arr)=>{
-    const prev=arr[i+1];let delta='';
-    if(prev){const d=w.w-prev.w;delta=d<-0.05?`<span class="hist-delta dn">▼ ${Math.abs(d).toFixed(1)}</span>`:d>0.05?`<span class="hist-delta up">▲ ${d.toFixed(1)}</span>`:`<span class="hist-delta same">—</span>`}
-    return `<div class="hist-item"><span class="hist-date">${w.date.split('-').reverse().join('.')}</span><span class="hist-w">${w.w.toFixed(1)} ק"ג</span>${delta}${w.note?`<span class="hist-note">${w.note}</span>`:''}</div>`
-  }).join('')
+  ctx.strokeStyle="#b5f03d";ctx.lineWidth=2.5;ctx.lineJoin="round";ctx.stroke();
+  ws.forEach((w,i)=>{ctx.beginPath();ctx.arc(toX(i),toY(w.w),4,0,Math.PI*2);ctx.fillStyle="#b5f03d";ctx.fill();ctx.beginPath();ctx.arc(toX(i),toY(w.w),2,0,Math.PI*2);ctx.fillStyle="#0d0d0d";ctx.fill()});
+  ctx.fillStyle="#444";ctx.font="8px Heebo";ctx.textAlign="center";
+  ws.forEach((w,i)=>{if(ws.length<=7||i===0||i===ws.length-1)ctx.fillText(w.date.slice(5).split("-").reverse().join("/"),toX(i),H-pad.b+13)});
 }
 
 // ── QUICK MEALS ──
@@ -567,99 +586,89 @@ const QUICK=[
   {name:"סלט + טחינה",cals:150,prot:4,fib:5,fat:10},
   {name:"בננה + גבינה",cals:220,prot:8,fib:2,fat:6},
 ];
-function buildQuick(){
-  document.getElementById('quickGrid').innerHTML=QUICK.map((q,i)=>`<button class="qbtn" onclick="addQuick(${i})">${q.name}<span class="qbtn-meta">${q.cals} קל' · ${q.prot}g חלבון</span></button>`).join('')
-}
-function addQuick(i){const q=QUICK[i];S.meals.push({date:today(),...q});save();updateHeader();renderMeals();toast('✓ '+q.name+' נוספה')}
+function buildQuick(){document.getElementById("qGrid").innerHTML=QUICK.map((q,i)=>`<button class="qb" onclick="addQuick(${i})">${q.name}<span class="qb-m">${q.cals} קל' · ${q.prot}g חלבון</span></button>`).join("")}
+function addQuick(i){const q=QUICK[i];S.meals.push({date:today(),...q});save();updateHeader();renderMeals();updateTimeWidget();toast("✓ "+q.name+" נוספה")}
 function addManual(){
-  const name=document.getElementById('manName').value.trim();
-  const cals=parseFloat(document.getElementById('manC').value)||0;
-  const prot=parseFloat(document.getElementById('manP').value)||0;
-  const fib=parseFloat(document.getElementById('manF').value)||0;
-  const fat=parseFloat(document.getElementById('manT').value)||0;
-  if(!name||!cals){alert('מלאי שם וקלוריות');return}
+  const name=document.getElementById("maN").value.trim();
+  const cals=parseFloat(document.getElementById("maC").value)||0;
+  const prot=parseFloat(document.getElementById("maP").value)||0;
+  const fib=parseFloat(document.getElementById("maF").value)||0;
+  const fat=parseFloat(document.getElementById("maT").value)||0;
+  if(!name||!cals){alert("מלאי שם וקלוריות");return}
   S.meals.push({date:today(),name,cals,prot,fib,fat});save();
-  ['manName','manC','manP','manF','manT'].forEach(id=>document.getElementById(id).value='');
-  updateHeader();renderMeals();toast('✓ '+name+' נוספה');
+  ["maN","maC","maP","maF","maT"].forEach(id=>document.getElementById(id).value="");
+  updateHeader();renderMeals();updateTimeWidget();toast("✓ "+name+" נוספה");
 }
 function renderMeals(){
-  const t=today();
-  const items=S.meals.map((m,i)=>({...m,idx:i})).filter(m=>m.date===t);
-  const el=document.getElementById('mealsList');if(!el)return;
+  const t=today(),items=S.meals.map((m,i)=>({...m,idx:i})).filter(m=>m.date===t);
+  const el=document.getElementById("mList");if(!el)return;
   if(!items.length){el.innerHTML='<div class="empty">לא נרשמו ארוחות עדיין</div>';return}
-  el.innerHTML=items.map(m=>`<div class="meal-item">
-    <div class="meal-dots"><div class="meal-dot" style="background:var(--accent)"></div><div class="meal-dot" style="background:var(--blue)"></div><div class="meal-dot" style="background:var(--orange)"></div></div>
-    <div style="flex:1"><div class="meal-name">${m.name}</div><div class="meal-macro-line">חלבון ${m.prot||0}g · סיבים ${m.fib||0}g · שומן ${m.fat||0}g</div></div>
-    <div class="meal-kcal">${m.cals} קל'</div>
-    <button class="meal-del" onclick="delMeal(${m.idx})">✕</button>
-  </div>`).join('')
+  el.innerHTML=items.map(m=>`<div class="mi"><div class="mdots"><div class="mdot" style="background:var(--a)"></div><div class="mdot" style="background:var(--blue)"></div><div class="mdot" style="background:var(--org)"></div></div><div style="flex:1"><div class="mn">${m.name}</div><div class="mm">חלבון ${m.prot||0}g · סיבים ${m.fib||0}g · שומן ${m.fat||0}g</div></div><div class="mk">${m.cals} קל'</div><button class="md" onclick="delMeal(${m.idx})">✕</button></div>`).join("")
 }
-function delMeal(idx){S.meals.splice(idx,1);save();updateHeader();renderMeals()}
+function delMeal(i){S.meals.splice(i,1);save();updateHeader();renderMeals();updateTimeWidget()}
 
 // ── AI SCAN ──
-let pendingMeal=null;
+let pendM=null;
 function handleImg(e){
   const file=e.target.files[0];if(!file)return;
   const reader=new FileReader();
   reader.onload=async ev=>{
-    const zone=document.getElementById('camZone');
-    zone.classList.add('has-img');
+    const zone=document.getElementById("camZone");
+    zone.classList.add("has-img");
     zone.innerHTML=`<img src="${ev.target.result}" alt="ארוחה">`;
-    document.getElementById('aiRes').classList.remove('show');
-    pendingMeal=null;
-    await analyzeImg(ev.target.result.split(',')[1],file.type||'image/jpeg');
+    document.getElementById("aiR").classList.remove("show");
+    pendM=null;
+    await analyzeImg(ev.target.result.split(",")[1],file.type||"image/jpeg");
   };
-  reader.readAsDataURL(file);e.target.value='';
+  reader.readAsDataURL(file);e.target.value="";
 }
 async function analyzeImg(b64,mime){
-  showLoad('מנתח תמונה...');
+  showLd("מנתח תמונה...");
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mime,data:b64}},{type:'text',text:'אתה דיאטנית ישראלית מומחית. נתח את הארוחה בתמונה והחזר JSON בלבד:\n{"name":"שם בעברית","cals":מספר,"prot":גרם חלבון,"fib":גרם סיבים,"fat":גרם שומן,"note":"טיפ קצר בעברית"}'}]}]})});
+    const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,messages:[{role:"user",content:[{type:"image",source:{type:"base64",media_type:mime,data:b64}},{type:"text",text:"אתה דיאטנית ישראלית. נתח את הארוחה והחזר JSON בלבד:\n{\"name\":\"שם בעברית\",\"cals\":מספר,\"prot\":גרם,\"fib\":גרם,\"fat\":גרם,\"note\":\"טיפ קצר בעברית\"}"}]}]})});
     const d=await res.json();
-    showAiResult(JSON.parse((d.content?.[0]?.text||'{}').replace(/```json|```/g,'').trim()));
-  }catch(err){toast('שגיאה — נסי שוב');console.error(err)}finally{hideLoad()}
+    showAI(JSON.parse((d.content?.[0]?.text||"{}").replace(/```json|```/g,"").trim()));
+  }catch(e){toast("שגיאה — נסי שוב")}finally{hideLd()}
 }
 async function analyzeText(){
-  const txt=document.getElementById('txtMeal').value.trim();
-  if(!txt){toast('כתבי מה אכלת');return}
-  const btn=document.getElementById('txtBtn');btn.disabled=true;
-  showLoad('מנתח ארוחה...');
-  document.getElementById('aiRes').classList.remove('show');
-  const zone=document.getElementById('camZone');
-  zone.classList.remove('has-img');
-  zone.innerHTML='<div class="cam-icon">📷</div><div class="cam-hint">צלמי או העלי תמונה</div><div class="cam-hint2">AI יזהה ערכים תזונתיים</div>';
+  const txt=document.getElementById("txtM").value.trim();
+  if(!txt){toast("כתבי מה אכלת");return}
+  const btn=document.getElementById("txtBtn");btn.disabled=true;
+  showLd("מנתח ארוחה...");
+  document.getElementById("aiR").classList.remove("show");
+  resetCamZone();
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:'אתה דיאטנית ישראלית מומחית. המשתמשת אכלה: "'+txt+'".\nהחזר JSON בלבד:\n{"name":"תיאור קצר בעברית","cals":מספר,"prot":גרם חלבון,"fib":גרם סיבים,"fat":גרם שומן,"note":"טיפ תזונתי קצר בעברית"}'}]})});
+    const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,messages:[{role:"user",content:"דיאטנית ישראלית. המשתמשת אכלה: \""+txt+"\".\nהחזר JSON בלבד:\n{\"name\":\"תיאור קצר בעברית\",\"cals\":מספר,\"prot\":גרם,\"fib\":גרם,\"fat\":גרם,\"note\":\"טיפ בעברית\"}"}]})});
     const d=await res.json();
-    showAiResult(JSON.parse((d.content?.[0]?.text||'{}').replace(/```json|```/g,'').trim()));
-    document.getElementById('txtMeal').value='';
-  }catch(err){toast('שגיאה — נסי שוב');console.error(err)}finally{hideLoad();btn.disabled=false}
+    showAI(JSON.parse((d.content?.[0]?.text||"{}").replace(/```json|```/g,"").trim()));
+    document.getElementById("txtM").value="";
+  }catch(e){toast("שגיאה — נסי שוב")}finally{hideLd();btn.disabled=false}
 }
-function showAiResult(meal){
-  pendingMeal={...meal,date:today()};
-  document.getElementById('aiName').textContent=meal.name||'ארוחה';
-  document.getElementById('aiC').textContent=meal.cals||'—';
-  document.getElementById('aiP').textContent=meal.prot||'—';
-  document.getElementById('aiF').textContent=meal.fib||'—';
-  document.getElementById('aiT').textContent=meal.fat||'—';
-  document.getElementById('aiNote').textContent=meal.note||'';
-  document.getElementById('aiRes').classList.add('show');
+function showAI(meal){
+  pendM={...meal,date:today()};
+  document.getElementById("aiN").textContent=meal.name||"ארוחה";
+  document.getElementById("aiC").textContent=meal.cals||"—";
+  document.getElementById("aiP").textContent=meal.prot||"—";
+  document.getElementById("aiF").textContent=meal.fib||"—";
+  document.getElementById("aiT").textContent=meal.fat||"—";
+  document.getElementById("aiNote").textContent=meal.note||"";
+  document.getElementById("aiR").classList.add("show");
 }
 function addAiMeal(){
-  if(!pendingMeal)return;
-  S.meals.push(pendingMeal);save();updateHeader();
-  toast('✓ '+pendingMeal.name+' נוספה');
-  pendingMeal=null;
-  document.getElementById('aiRes').classList.remove('show');
-  const zone=document.getElementById('camZone');
-  zone.classList.remove('has-img');
-  zone.innerHTML='<div class="cam-icon">📷</div><div class="cam-hint">צלמי או העלי תמונה</div><div class="cam-hint2">AI יזהה ערכים תזונתיים</div>';
+  if(!pendM)return;
+  S.meals.push(pendM);save();updateHeader();updateTimeWidget();
+  toast("✓ "+pendM.name+" נוספה");
+  pendM=null;document.getElementById("aiR").classList.remove("show");resetCamZone();
+}
+function resetCamZone(){
+  const z=document.getElementById("camZone");
+  z.classList.remove("has-img");
+  z.innerHTML=`<div class="ci">📷</div><div class="ch">בחרי תמונת ארוחה</div><div class="ch2">AI יחשב קלוריות ומאקרו</div>`;
 }
 
 // ── SUMMARY ──
 function renderSummary(){
-  const meals=todayMeals();
-  const tot={cals:0,prot:0,fib:0,fat:0};
+  const meals=todayMeals(),tot={cals:0,prot:0,fib:0,fat:0};
   meals.forEach(m=>{tot.cals+=m.cals||0;tot.prot+=m.prot||0;tot.fib+=m.fib||0;tot.fat+=m.fat||0});
   const score=Math.round(
     Math.min(100,(tot.cals<=TGT.cals?tot.cals/TGT.cals:Math.max(0,1-((tot.cals-TGT.cals)/TGT.cals)*1.5))*100)*0.35+
@@ -667,65 +676,67 @@ function renderSummary(){
     Math.min(100,(tot.fib/TGT.fib)*100)*0.2+
     (tot.fat<=TGT.fat?100:Math.max(0,100-((tot.fat-TGT.fat)/TGT.fat)*100))*0.1
   );
-  const color=score>=75?'var(--accent)':score>=50?'var(--orange)':'var(--red)';
-  const lbl=score>=80?'מצוין!':score>=60?'טוב':score>=40?'בסדר':'יש מה לשפר';
+  const col=score>=75?"var(--a)":score>=50?"var(--org)":"var(--red)";
+  const lbl=score>=80?"מצוין!":score>=60?"טוב":score>=40?"בסדר":"יש מה לשפר";
   const deg=(score/100)*360;
-
   const macros=[
-    {label:'קלוריות',got:Math.round(tot.cals),tgt:TGT.cals,unit:'קל\'',pct:Math.min(100,(tot.cals/TGT.cals)*100),color:'var(--accent)',over:tot.cals>TGT.cals},
-    {label:'חלבון',got:Math.round(tot.prot),tgt:TGT.prot,unit:'g',pct:Math.min(100,(tot.prot/TGT.prot)*100),color:'var(--blue)',over:false},
-    {label:'סיבים',got:Math.round(tot.fib),tgt:TGT.fib,unit:'g',pct:Math.min(100,(tot.fib/TGT.fib)*100),color:'var(--orange)',over:false},
-    {label:'שומן',got:Math.round(tot.fat),tgt:TGT.fat,unit:'g',pct:Math.min(100,(tot.fat/TGT.fat)*100),color:'var(--purple)',over:tot.fat>TGT.fat},
+    {l:"קלוריות",g:Math.round(tot.cals),tg:TGT.cals,u:"קל'",pct:Math.min(100,(tot.cals/TGT.cals)*100),c:"var(--a)",ov:tot.cals>TGT.cals},
+    {l:"חלבון",g:Math.round(tot.prot),tg:TGT.prot,u:"g",pct:Math.min(100,(tot.prot/TGT.prot)*100),c:"var(--blue)",ov:false},
+    {l:"סיבים",g:Math.round(tot.fib),tg:TGT.fib,u:"g",pct:Math.min(100,(tot.fib/TGT.fib)*100),c:"var(--org)",ov:false},
+    {l:"שומן",g:Math.round(tot.fat),tg:TGT.fat,u:"g",pct:Math.min(100,(tot.fat/TGT.fat)*100),c:"var(--pur)",ov:tot.fat>TGT.fat},
   ];
-
-  const advices=[];
-  if(!meals.length){advices.push({type:'warn',icon:'🍽',title:'לא נרשמו ארוחות היום',body:'התחילי לרשום כדי לקבל ניתוח מדויק.'})}
+  const advs=[];
+  if(!meals.length){advs.push({t:"warn",i:"🍽",ti:"לא נרשמו ארוחות היום",b:"התחילי לרשום כדי לקבל ניתוח מדויק."})}
   else{
-    if(tot.prot<TGT.prot*0.7)advices.push({type:'warn',icon:'💪',title:'חלבון נמוך — '+Math.round(tot.prot)+'g מתוך יעד '+TGT.prot+'g',body:'הוסיפי: ביצה קשה (6g), קוטג\' (11g), טונה (20g) או יוגורט יווני (18g).'});
-    else if(tot.prot>=TGT.prot*0.9)advices.push({type:'good',icon:'💪',title:'יעד חלבון מושג!',body:Math.round(tot.prot)+'g חלבון — מצוין לשמירה על שריר.'});
-    if(tot.fib<TGT.fib*0.6)advices.push({type:'warn',icon:'🥦',title:'סיבים נמוכים — '+Math.round(tot.fib)+'g מתוך יעד '+TGT.fib+'g',body:'הוסיפי ירקות, קטניות או פרי. חצי אבוקדו = 7g סיבים.'});
-    else if(tot.fib>=TGT.fib)advices.push({type:'good',icon:'🥦',title:'סיבים — יעד הושג!',body:Math.round(tot.fib)+'g סיבים. מצוין לשובע ועיכול.'});
-    if(tot.cals>TGT.cals*1.1)advices.push({type:'bad',icon:'⚠️',title:'עברת יעד קלוריות ב-'+Math.round(tot.cals-TGT.cals)+' קל\'',body:'לא אסון — מחר מתאפסים. הערב: רק יוגורט יווני, בלי פחמימות.'});
-    else if(tot.cals<TGT.cals*0.5&&meals.length>0)advices.push({type:'warn',icon:'🔋',title:'מעט מדי קלוריות',body:'אכילה מועטה מדי מאטה חילוף חומרים. הוסיפי עוד ארוחה.'});
-    else if(tot.cals>=TGT.cals*0.8&&tot.cals<=TGT.cals)advices.push({type:'good',icon:'🎯',title:'קלוריות — כיוון מצוין!',body:Math.round(tot.cals)+' קל\' — אתה בתוך יעד.'});
+    if(tot.prot<TGT.prot*0.7)advs.push({t:"warn",i:"💪",ti:"חלבון נמוך — "+Math.round(tot.prot)+"g מתוך "+TGT.prot+"g",b:"הוסיפי: ביצה (6g), קוטג' (11g), טונה (20g) או יוגורט יווני (18g)."});
+    else if(tot.prot>=TGT.prot*0.9)advs.push({t:"good",i:"💪",ti:"יעד חלבון מושג!",b:Math.round(tot.prot)+"g — מצוין לשמירה על שריר."});
+    if(tot.fib<TGT.fib*0.6)advs.push({t:"warn",i:"🥦",ti:"סיבים נמוכים — "+Math.round(tot.fib)+"g מתוך "+TGT.fib+"g",b:"הוסיפי ירקות, קטניות או פרי."});
+    else if(tot.fib>=TGT.fib)advs.push({t:"good",i:"🥦",ti:"סיבים — יעד הושג!",b:Math.round(tot.fib)+"g — מצוין לשובע."});
+    if(tot.cals>TGT.cals*1.1)advs.push({t:"bad",i:"⚠️",ti:"עברת יעד קלוריות ב-"+Math.round(tot.cals-TGT.cals)+" קל'",b:"הערב: רק יוגורט יווני בלי פחמימות."});
+    else if(tot.cals<TGT.cals*0.5&&meals.length>0)advs.push({t:"warn",i:"🔋",ti:"מעט מדי קלוריות",b:"אכילה מועטה מאטה חילוף חומרים."});
+    else if(tot.cals>=TGT.cals*0.8&&tot.cals<=TGT.cals)advs.push({t:"good",i:"🎯",ti:"קלוריות — כיוון מצוין!",b:Math.round(tot.cals)+" קל' — בתוך יעד."});
     const rem=TGT.cals-tot.cals;
-    if(rem>200&&rem<600)advices.push({type:'good',icon:'🌙',title:'נשאר '+Math.round(rem)+' קל\' להערב',body:'מספיק לסלט + טונה + פיתה, או יוגורט יווני + פרי.'});
-    if(S.sam.steps&&S.sam.steps>=8000)advices.push({type:'good',icon:'👟',title:S.sam.steps.toLocaleString()+' צעדים — יעד הושג!',body:'~250-300 קל\' נשרפו. זה משפיע.'});
-    else if(S.sam.steps&&S.sam.steps<5000)advices.push({type:'warn',icon:'👟',title:'רק '+S.sam.steps.toLocaleString()+' צעדים',body:'הוסיפי הליכה קצרה, 10 דקות = ~1,000 צעדים.'});
+    if(rem>200&&rem<600)advs.push({t:"good",i:"🌙",ti:"נשאר "+Math.round(rem)+" קל' להערב",b:"סלט + טונה + פיתה, או יוגורט יווני + פרי."});
+    if(S.sam.steps&&S.sam.steps>=8000)advs.push({t:"good",i:"👟",ti:S.sam.steps.toLocaleString()+" צעדים — יעד הושג!",b:"~250-300 קל' נשרפו."});
+    else if(S.sam.steps&&S.sam.steps<5000)advs.push({t:"warn",i:"👟",ti:"רק "+S.sam.steps.toLocaleString()+" צעדים",b:"הוסיפי 10 דקות הליכה."});
   }
-
-  document.getElementById('sumContent').innerHTML=`
-    <div class="score-wrap">
-      <div style="font-size:10px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:9px">ציון יום</div>
-      <div class="score-ring-outer" style="background:conic-gradient(${color} ${deg}deg,var(--surface2) ${deg}deg)">
-        <div class="score-ring-inner"><div class="score-num" style="color:${color}">${score}</div><div class="score-lbl">${lbl}</div></div>
-      </div>
-    </div>
-    <div class="sum-macros">${macros.map(m=>`<div class="sum-mc"><div class="sum-mc-lbl">${m.label}</div><div class="sum-mc-bar-track"><div class="sum-mc-bar-fill" style="width:${m.pct.toFixed(0)}%;background:${m.over?'var(--red)':m.color}"></div></div><div class="sum-mc-nums"><span class="sum-mc-got" style="color:${m.over?'var(--red)':m.color}">${m.got}${m.unit}</span><span class="sum-mc-tgt">/ ${m.tgt}${m.unit}</span></div></div>`).join('')}</div>
-    <div class="sec">עצות להמשך היום</div>
-    ${advices.map(a=>`<div class="advice-card ${a.type}"><div class="adv-icon">${a.icon}</div><div class="adv-title">${a.title}</div><div class="adv-body">${a.body}</div></div>`).join('') || '<div class="empty">רשמי ארוחות לקבל עצות</div>'}
-  `;
+  let html='<div class="sr-wrap">';
+  html+='<div style="font-size:10px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:9px">ציון יום</div>';
+  html+='<div class="score-ring" style="background:conic-gradient('+col+' '+deg+'deg,var(--s2) '+deg+'deg)">';
+  html+='<div class="score-inner"><div class="sn" style="color:'+col+'">'+score+'</div><div class="sl2">'+lbl+'</div></div></div></div>';
+  html+='<div class="sum-m">';
+  macros.forEach(m=>{
+    html+='<div class="smc"><div class="smc-l">'+m.l+'</div>';
+    html+='<div class="smc-t"><div class="smc-f" style="width:'+m.pct.toFixed(0)+'%;background:'+(m.ov?"var(--red)":m.c)+'"></div></div>';
+    html+='<div class="smc-n"><span class="smc-g" style="color:'+(m.ov?"var(--red)":m.c)+'">'+m.g+m.u+'</span><span class="smc-tg">/ '+m.tg+m.u+'</span></div></div>';
+  });
+  html+='</div><div class="sec">עצות להמשך היום</div>';
+  if(advs.length){advs.forEach(a=>{html+='<div class="adv '+a.t+'"><div class="adv-i">'+a.i+'</div><div class="adv-t">'+a.ti+'</div><div class="adv-b">'+a.b+'</div></div>'})}
+  else{html+='<div class="empty">רשמי ארוחות לקבל עצות</div>'}
+  document.getElementById("sumC").innerHTML=html;
 }
+
 async function genSummary(){
-  const meals=todayMeals();if(!meals.length){toast('רשמי ארוחות קודם');return}
-  const btn=document.getElementById('sumBtn');btn.disabled=true;btn.textContent='מייצרת...';
-  showLoad('מייצרת סיכום...');
+  const meals=todayMeals();if(!meals.length){toast("רשמי ארוחות קודם");return}
+  const btn=document.getElementById("sumBtn");btn.disabled=true;btn.textContent="מייצרת...";
+  showLd("מייצרת סיכום...");
   const tot={cals:0,prot:0,fib:0,fat:0};
   meals.forEach(m=>{tot.cals+=m.cals||0;tot.prot+=m.prot||0;tot.fib+=m.fib||0;tot.fat+=m.fat||0});
   const cw=S.weights.length?S.weights[S.weights.length-1].w:90;
-  const mealList=meals.map(m=>m.name+' ('+m.cals+' קל\')').join(', ');
+  const mealList=meals.map(m=>m.name+' ('+m.cals+" קל')").join(', ');
+  const prompt='דיאטנית ישראלית חמה. אמא ב-41, גובה 172, משקל '+cw+' קג, יעד 72. מתאמנת פעמיים בשבוע. אין לה זמן לבישול. היום: '+mealList+'. סהכ: '+Math.round(tot.cals)+' קל, '+Math.round(tot.prot)+'g חלבון, '+Math.round(tot.fib)+'g סיבים, '+Math.round(tot.fat)+'g שומן. כתבי סיכום קצר (4-5 שורות) + 3 עצות מעשיות. עברית, חברותי, לא שיפוטי.';
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:600,messages:[{role:'user',content:'אתה דיאטנית ישראלית חמה ומקצועית. אמא ב-41, גובה 172, משקל '+cw+' ק"ג, יעד 72 ק"ג. מתאמנת פעמיים בשבוע. אין לה זמן לבישול.\nהיום אכלה: '+mealList+'\nסה"כ: '+Math.round(tot.cals)+' קל\', '+Math.round(tot.prot)+'g חלבון, '+Math.round(tot.fib)+'g סיבים, '+Math.round(tot.fat)+'g שומן.\nיעדים: 1500 קל\', 90g חלבון, 25g סיבים, 50g שומן.\nכתבי סיכום קצר ואישי (4-5 שורות) + 3 עצות מעשיות להמשך היום. עברית, סגנון חברותי, לא שיפוטי.'}]})});
+    const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:600,messages:[{role:"user",content:prompt}]})});
     const d=await res.json();
-    document.getElementById('sumAiTxt').textContent=d.content?.[0]?.text||'';
-    document.getElementById('sumAiRes').classList.add('show');
-  }catch(e){toast('שגיאה — נסי שוב')}
-  finally{hideLoad();btn.disabled=false;btn.textContent='✨ קבלי סיכום יומי + עצות AI'}
+    document.getElementById("sumTxt").textContent=d.content?.[0]?.text||"";
+    document.getElementById("sumAI").classList.add("show");
+  }catch(e){toast("שגיאה — נסי שוב")}
+  finally{hideLd();btn.disabled=false;btn.textContent="✨ קבלי סיכום יומי + עצות AI"}
 }
 
 // ── CHARTS ──
 let period=7;
-function setPeriod(d,btn){period=d;document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');initCharts()}
+function setPeriod(d,btn){period=d;document.querySelectorAll(".pb").forEach(b=>b.classList.remove("active"));btn.classList.add("active");initCharts()}
 function getDays(n){
   const r=[];
   for(let i=n-1;i>=0;i--){
@@ -734,186 +745,165 @@ function getDays(n){
     const dm=S.meals.filter(m=>m.date===ds);
     const tot={cals:0,prot:0,fib:0,fat:0};
     dm.forEach(m=>{tot.cals+=m.cals||0;tot.prot+=m.prot||0;tot.fib+=m.fib||0;tot.fat+=m.fat||0});
-    const lbl=i===0?'היום':i===1?'אתמול':(d.getDate()+'/'+(d.getMonth()+1));
-    r.push({ds,lbl,...tot,has:dm.length>0});
+    r.push({ds,lbl:i===0?"היום":i===1?"אתמול":(d.getDate()+"/"+(d.getMonth()+1)),...tot,has:dm.length>0});
   }
   return r;
 }
-function getWDays(n){const cut=new Date();cut.setDate(cut.getDate()-n);const cs=cut.toISOString().slice(0,10);return S.weights.filter(w=>w.date>=cs)}
-
-function drawBar(canvasId,data,getFn,color,targetVal){
-  const canvas=document.getElementById(canvasId);if(!canvas)return;
-  const dpr=window.devicePixelRatio||1,W=canvas.offsetWidth||340,H=canvas.offsetHeight||130;
-  canvas.width=W*dpr;canvas.height=H*dpr;
-  const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);ctx.clearRect(0,0,W,H);
-  const vals=data.map(getFn);
-  const maxV=Math.max(...vals,targetVal*1.2,10);
+function getWD(n){const c=new Date();c.setDate(c.getDate()-n);const cs=c.toISOString().slice(0,10);return S.weights.filter(w=>w.date>=cs)}
+function drawBar(id,data,gFn,color,tgt){
+  const cv=document.getElementById(id);if(!cv)return;
+  const dpr=window.devicePixelRatio||1,W=cv.offsetWidth||340,H=cv.offsetHeight||130;
+  cv.width=W*dpr;cv.height=H*dpr;
+  const ctx=cv.getContext("2d");ctx.scale(dpr,dpr);ctx.clearRect(0,0,W,H);
+  const vals=data.map(gFn),maxV=Math.max(...vals,tgt*1.2,10);
   const pad={t:14,b:22,l:6,r:6},cw2=W-pad.l-pad.r,ch=H-pad.t-pad.b;
   const bw=Math.max(4,(cw2/data.length)*0.55),gap=cw2/data.length;
-  if(targetVal){
-    const ty=pad.t+((maxV-targetVal)/maxV)*ch;
-    ctx.setLineDash([3,3]);ctx.strokeStyle='#333';ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(pad.l,ty);ctx.lineTo(W-pad.r,ty);ctx.stroke();ctx.setLineDash([]);
-  }
+  if(tgt){const ty=pad.t+((maxV-tgt)/maxV)*ch;ctx.setLineDash([3,3]);ctx.strokeStyle="#333";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,ty);ctx.lineTo(W-pad.r,ty);ctx.stroke();ctx.setLineDash([])}
   data.forEach((d,i)=>{
-    const val=getFn(d);if(!d.has&&val===0)return;
+    const val=gFn(d);if(!d.has&&val===0)return;
     const x=pad.l+i*gap+gap/2,bh=(val/maxV)*ch,y=pad.t+ch-bh;
-    const over=targetVal&&val>targetVal;
-    const grad=ctx.createLinearGradient(0,y,0,y+bh);
-    grad.addColorStop(0,over?'rgba(255,92,92,0.9)':color.replace(')',',0.9)').replace('rgb','rgba'));
-    grad.addColorStop(1,over?'rgba(255,92,92,0.25)':color.replace(')',',0.25)').replace('rgb','rgba'));
+    const ov=tgt&&val>tgt;
+    const gr=ctx.createLinearGradient(0,y,0,y+bh);
+    gr.addColorStop(0,ov?"rgba(255,92,92,0.9)":color.replace(")",",0.9)").replace("rgb","rgba"));
+    gr.addColorStop(1,ov?"rgba(255,92,92,0.25)":color.replace(")",",0.25)").replace("rgb","rgba"));
     const r=Math.min(4,bw/2);
     ctx.beginPath();ctx.moveTo(x-bw/2+r,y);ctx.lineTo(x+bw/2-r,y);ctx.arcTo(x+bw/2,y,x+bw/2,y+r,r);ctx.lineTo(x+bw/2,y+bh);ctx.lineTo(x-bw/2,y+bh);ctx.arcTo(x-bw/2,y,x-bw/2+r,y,r);ctx.closePath();
-    ctx.fillStyle=grad;ctx.fill();
-    if(val>0&&bw>14){ctx.fillStyle=over?'#ff5c5c':'#666';ctx.font='bold '+Math.max(8,Math.min(9,bw-2))+'px Heebo';ctx.textAlign='center';ctx.fillText(Math.round(val),x,y-3)}
-    ctx.fillStyle='#444';ctx.font='8px Heebo';ctx.textAlign='center';ctx.fillText(d.lbl,x,H-pad.b+13);
+    ctx.fillStyle=gr;ctx.fill();
+    if(val>0&&bw>14){ctx.fillStyle=ov?"#ff5c5c":"#666";ctx.font="bold "+Math.max(8,Math.min(9,bw-2))+"px Heebo";ctx.textAlign="center";ctx.fillText(Math.round(val),x,y-3)}
+    ctx.fillStyle="#444";ctx.font="8px Heebo";ctx.textAlign="center";ctx.fillText(d.lbl,x,H-pad.b+13);
   });
 }
-
-function drawMultiLine(canvasId,data,series){
-  const canvas=document.getElementById(canvasId);if(!canvas)return;
-  const dpr=window.devicePixelRatio||1,W=canvas.offsetWidth||340,H=canvas.offsetHeight||130;
-  canvas.width=W*dpr;canvas.height=H*dpr;
-  const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);ctx.clearRect(0,0,W,H);
+function drawMulti(id,data,series){
+  const cv=document.getElementById(id);if(!cv)return;
+  const dpr=window.devicePixelRatio||1,W=cv.offsetWidth||340,H=cv.offsetHeight||130;
+  cv.width=W*dpr;cv.height=H*dpr;
+  const ctx=cv.getContext("2d");ctx.scale(dpr,dpr);ctx.clearRect(0,0,W,H);
   if(data.length<2)return;
-  const allV=series.flatMap(s=>data.map(d=>s.get(d)));
-  const maxV=Math.max(...allV,10);
+  const allV=series.flatMap(s=>data.map(d=>s.g(d))),maxV=Math.max(...allV,10);
   const pad={t:10,b:22,l:6,r:6},cw2=W-pad.l-pad.r,ch=H-pad.t-pad.b;
-  const toX=i=>pad.l+(i/(data.length-1))*cw2, toY=v=>pad.t+((maxV-v)/maxV)*ch;
+  const toX=i=>pad.l+(i/(data.length-1))*cw2,toY=v=>pad.t+((maxV-v)/maxV)*ch;
   series.forEach(s=>{
-    if(s.tgt){const ty=toY(s.tgt);ctx.setLineDash([3,3]);ctx.strokeStyle=s.color.replace(')',',0.3)').replace('rgb','rgba');ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,ty);ctx.lineTo(W-pad.r,ty);ctx.stroke();ctx.setLineDash([])}
-    const grad=ctx.createLinearGradient(0,pad.t,0,H-pad.b);
-    grad.addColorStop(0,s.color.replace(')',',0.15)').replace('rgb','rgba'));
-    grad.addColorStop(1,s.color.replace(')',',0)').replace('rgb','rgba'));
-    ctx.beginPath();data.forEach((d,i)=>i===0?ctx.moveTo(toX(i),toY(s.get(d))):ctx.lineTo(toX(i),toY(s.get(d))));
-    ctx.lineTo(toX(data.length-1),H-pad.b);ctx.lineTo(toX(0),H-pad.b);ctx.closePath();ctx.fillStyle=grad;ctx.fill();
-    ctx.beginPath();data.forEach((d,i)=>i===0?ctx.moveTo(toX(i),toY(s.get(d))):ctx.lineTo(toX(i),toY(s.get(d))));
-    ctx.strokeStyle=s.color;ctx.lineWidth=2;ctx.lineJoin='round';ctx.stroke();
+    if(s.tgt){const ty=toY(s.tgt);ctx.setLineDash([3,3]);ctx.strokeStyle=s.c.replace(")",",0.3)").replace("rgb","rgba");ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,ty);ctx.lineTo(W-pad.r,ty);ctx.stroke();ctx.setLineDash([])}
+    const gr=ctx.createLinearGradient(0,pad.t,0,H-pad.b);
+    gr.addColorStop(0,s.c.replace(")",",0.15)").replace("rgb","rgba"));
+    gr.addColorStop(1,s.c.replace(")",",0)").replace("rgb","rgba"));
+    ctx.beginPath();data.forEach((d,i)=>i===0?ctx.moveTo(toX(i),toY(s.g(d))):ctx.lineTo(toX(i),toY(s.g(d))));
+    ctx.lineTo(toX(data.length-1),H-pad.b);ctx.lineTo(toX(0),H-pad.b);ctx.closePath();ctx.fillStyle=gr;ctx.fill();
+    ctx.beginPath();data.forEach((d,i)=>i===0?ctx.moveTo(toX(i),toY(s.g(d))):ctx.lineTo(toX(i),toY(s.g(d))));
+    ctx.strokeStyle=s.c;ctx.lineWidth=2;ctx.lineJoin="round";ctx.stroke();
   });
-  ctx.fillStyle='#444';ctx.font='8px Heebo';ctx.textAlign='center';
+  ctx.fillStyle="#444";ctx.font="8px Heebo";ctx.textAlign="center";
   data.forEach((d,i)=>{if(data.length<=8||i===0||i===data.length-1||i%Math.ceil(data.length/5)===0)ctx.fillText(d.lbl,toX(i),H-pad.b+13)});
 }
-
-function drawWTrend(canvasId){
-  const ws=getWDays(period);
-  const canvas=document.getElementById(canvasId);if(!canvas)return;
-  const dpr=window.devicePixelRatio||1,W=canvas.offsetWidth||340,H=canvas.offsetHeight||130;
-  canvas.width=W*dpr;canvas.height=H*dpr;
-  const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);ctx.clearRect(0,0,W,H);
-  if(ws.length<2){ctx.fillStyle='#444';ctx.font='12px Heebo';ctx.textAlign='center';ctx.fillText('נדרשות לפחות 2 שקילות',W/2,H/2);return}
-  const vals=ws.map(w=>w.w);
-  const minV=Math.min(...vals,TARGET)-0.5,maxV=Math.max(...vals)+0.5;
+function drawWTrend(id){
+  const ws=getWD(period),cv=document.getElementById(id);if(!cv)return;
+  const dpr=window.devicePixelRatio||1,W=cv.offsetWidth||340,H=cv.offsetHeight||130;
+  cv.width=W*dpr;cv.height=H*dpr;
+  const ctx=cv.getContext("2d");ctx.scale(dpr,dpr);ctx.clearRect(0,0,W,H);
+  if(ws.length<2){ctx.fillStyle="#444";ctx.font="12px Heebo";ctx.textAlign="center";ctx.fillText("נדרשות לפחות 2 שקילות",W/2,H/2);return}
+  const vals=ws.map(w=>w.w),minV=Math.min(...vals,TARGET)-0.5,maxV=Math.max(...vals)+0.5;
   const pad={t:12,b:22,l:8,r:8},cw2=W-pad.l-pad.r,ch=H-pad.t-pad.b;
-  const toX=i=>pad.l+(i/(ws.length-1))*cw2, toY=v=>pad.t+((maxV-v)/(maxV-minV))*ch;
-  // target line
-  const ty=toY(TARGET);ctx.setLineDash([3,3]);ctx.strokeStyle='#2a2a2a';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,ty);ctx.lineTo(W-pad.r,ty);ctx.stroke();ctx.setLineDash([]);
-  ctx.fillStyle='#333';ctx.font='9px Heebo';ctx.textAlign='left';ctx.fillText('72',pad.l+2,ty-3);
-  // trend line
-  if(ws.length>=3){
-    const n=ws.length,xm=(n-1)/2,ym=vals.reduce((a,b)=>a+b,0)/n;
-    let num=0,den=0;vals.forEach((v,i)=>{num+=(i-xm)*(v-ym);den+=(i-xm)*(i-xm)});
-    const slope=den?num/den:0;
-    ctx.beginPath();ctx.moveTo(toX(0),toY(Math.max(minV,Math.min(maxV,ym+slope*(0-xm)))));ctx.lineTo(toX(n-1),toY(Math.max(minV,Math.min(maxV,ym+slope*(n-1-xm)))));
-    ctx.strokeStyle='rgba(181,240,61,0.2)';ctx.lineWidth=2;ctx.stroke();
-  }
-  // fill + line
-  const grad=ctx.createLinearGradient(0,pad.t,0,H-pad.b);grad.addColorStop(0,'rgba(181,240,61,0.18)');grad.addColorStop(1,'rgba(181,240,61,0)');
+  const toX=i=>pad.l+(i/(ws.length-1))*cw2,toY=v=>pad.t+((maxV-v)/(maxV-minV))*ch;
+  const ty=toY(TARGET);ctx.setLineDash([3,3]);ctx.strokeStyle="#2a2a2a";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,ty);ctx.lineTo(W-pad.r,ty);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle="#333";ctx.font="9px Heebo";ctx.textAlign="left";ctx.fillText("72",pad.l+2,ty-3);
+  if(ws.length>=3){const n=ws.length,xm=(n-1)/2,ym=vals.reduce((a,b)=>a+b,0)/n;let num=0,den=0;vals.forEach((v,i)=>{num+=(i-xm)*(v-ym);den+=(i-xm)*(i-xm)});const sl=den?num/den:0;ctx.beginPath();ctx.moveTo(toX(0),toY(Math.max(minV,Math.min(maxV,ym+sl*(0-xm)))));ctx.lineTo(toX(n-1),toY(Math.max(minV,Math.min(maxV,ym+sl*(n-1-xm)))));ctx.strokeStyle="rgba(181,240,61,0.2)";ctx.lineWidth=2;ctx.stroke()}
+  const gr=ctx.createLinearGradient(0,pad.t,0,H-pad.b);gr.addColorStop(0,"rgba(181,240,61,0.18)");gr.addColorStop(1,"rgba(181,240,61,0)");
   ctx.beginPath();ws.forEach((w,i)=>i===0?ctx.moveTo(toX(i),toY(w.w)):ctx.lineTo(toX(i),toY(w.w)));
-  ctx.lineTo(toX(ws.length-1),H-pad.b);ctx.lineTo(toX(0),H-pad.b);ctx.closePath();ctx.fillStyle=grad;ctx.fill();
+  ctx.lineTo(toX(ws.length-1),H-pad.b);ctx.lineTo(toX(0),H-pad.b);ctx.closePath();ctx.fillStyle=gr;ctx.fill();
   ctx.beginPath();ws.forEach((w,i)=>i===0?ctx.moveTo(toX(i),toY(w.w)):ctx.lineTo(toX(i),toY(w.w)));
-  ctx.strokeStyle='#b5f03d';ctx.lineWidth=2.5;ctx.lineJoin='round';ctx.stroke();
-  ws.forEach((w,i)=>{ctx.beginPath();ctx.arc(toX(i),toY(w.w),4,0,Math.PI*2);ctx.fillStyle='#b5f03d';ctx.fill();ctx.beginPath();ctx.arc(toX(i),toY(w.w),2,0,Math.PI*2);ctx.fillStyle='#0d0d0d';ctx.fill()});
-  ctx.fillStyle='#444';ctx.font='8px Heebo';ctx.textAlign='center';
-  ws.forEach((w,i)=>{if(ws.length<=7||i===0||i===ws.length-1)ctx.fillText(w.date.slice(5).split('-').reverse().join('/'),toX(i),H-pad.b+13)});
+  ctx.strokeStyle="#b5f03d";ctx.lineWidth=2.5;ctx.lineJoin="round";ctx.stroke();
+  ws.forEach((w,i)=>{ctx.beginPath();ctx.arc(toX(i),toY(w.w),4,0,Math.PI*2);ctx.fillStyle="#b5f03d";ctx.fill();ctx.beginPath();ctx.arc(toX(i),toY(w.w),2,0,Math.PI*2);ctx.fillStyle="#0d0d0d";ctx.fill()});
+  ctx.fillStyle="#444";ctx.font="8px Heebo";ctx.textAlign="center";
+  ws.forEach((w,i)=>{if(ws.length<=7||i===0||i===ws.length-1)ctx.fillText(w.date.slice(5).split("-").reverse().join("/"),toX(i),H-pad.b+13)});
 }
-
 function renderKPIs(data){
-  const dwd=data.filter(d=>d.has);
-  if(!dwd.length){document.getElementById('kpiRow').innerHTML='';return}
+  const dwd=data.filter(d=>d.has);if(!dwd.length){document.getElementById("kpiR").innerHTML="";return}
   const avgC=Math.round(dwd.reduce((s,d)=>s+d.cals,0)/dwd.length);
   const avgP=Math.round(dwd.reduce((s,d)=>s+d.prot,0)/dwd.length);
   const kpis=[
-    {val:avgC,lbl:"קל' ממוצע",delta:avgC<=1500?'✓ ביעד':'↑ מעל יעד',dc:avgC<=1500?'var(--accent)':'var(--red)',c:'var(--accent)'},
-    {val:avgP+'g',lbl:'חלבון ממוצע',delta:avgP>=90?'✓ ביעד':'חסר '+(90-avgP)+'g',dc:avgP>=90?'var(--accent)':'var(--orange)',c:'var(--blue)'},
-    {val:dwd.length,lbl:'ימים מתועדים',delta:'מתוך '+period,dc:'var(--muted)',c:'var(--purple)'},
+    {v:avgC,l:"קל' ממוצע",d:avgC<=1500?"✓ ביעד":"↑ מעל יעד",dc:avgC<=1500?"var(--a)":"var(--red)",c:"var(--a)"},
+    {v:avgP+"g",l:"חלבון ממוצע",d:avgP>=90?"✓ ביעד":"חסר "+(90-avgP)+"g",dc:avgP>=90?"var(--a)":"var(--org)",c:"var(--blue)"},
+    {v:dwd.length,l:"ימים מתועדים",d:"מתוך "+period,dc:"var(--mu)",c:"var(--pur)"},
   ];
-  document.getElementById('kpiRow').innerHTML=kpis.map(k=>`<div class="kpi"><div class="kpi-val" style="color:${k.c}">${k.val}</div><div class="kpi-lbl">${k.lbl}</div><div class="kpi-delta" style="color:${k.dc}">${k.delta}</div></div>`).join('');
+  document.getElementById("kpiR").innerHTML=kpis.map(k=>`<div class="kpi"><div class="kv" style="color:${k.c}">${k.v}</div><div class="kl">${k.l}</div><div class="kd" style="color:${k.dc}">${k.d}</div></div>`).join("");
 }
-
 function renderGoals(data){
-  const dwd=data.filter(d=>d.has);
-  if(!dwd.length){document.getElementById('goalGrid').innerHTML='';return}
+  const dwd=data.filter(d=>d.has);if(!dwd.length){document.getElementById("gGrid").innerHTML="";return}
   const goals=[
-    {lbl:'קלוריות',tgt:1500,avg:dwd.reduce((s,d)=>s+d.cals,0)/dwd.length,unit:"קל'",lower:true,c:'var(--accent)'},
-    {lbl:'חלבון',tgt:90,avg:dwd.reduce((s,d)=>s+d.prot,0)/dwd.length,unit:'g',lower:false,c:'var(--blue)'},
-    {lbl:'סיבים',tgt:25,avg:dwd.reduce((s,d)=>s+d.fib,0)/dwd.length,unit:'g',lower:false,c:'var(--orange)'},
-    {lbl:'ימים תועדים',tgt:period,avg:dwd.length,unit:'',lower:false,c:'var(--purple)'},
+    {l:"קלוריות",tg:1500,avg:dwd.reduce((s,d)=>s+d.cals,0)/dwd.length,u:"קל'",lo:true,c:"var(--a)"},
+    {l:"חלבון",tg:90,avg:dwd.reduce((s,d)=>s+d.prot,0)/dwd.length,u:"g",lo:false,c:"var(--blue)"},
+    {l:"סיבים",tg:25,avg:dwd.reduce((s,d)=>s+d.fib,0)/dwd.length,u:"g",lo:false,c:"var(--org)"},
+    {l:"ימים",tg:period,avg:dwd.length,u:"",lo:false,c:"var(--pur)"},
   ];
-  document.getElementById('goalGrid').innerHTML=goals.map(g=>{
-    const pct=g.lower?(g.avg<=g.tgt?100:Math.max(0,100-((g.avg-g.tgt)/g.tgt)*100)):Math.min(100,(g.avg/g.tgt)*100);
+  let html="";
+  goals.forEach(g=>{
+    const pct=g.lo?(g.avg<=g.tg?100:Math.max(0,100-((g.avg-g.tg)/g.tg)*100)):Math.min(100,(g.avg/g.tg)*100);
     const r=30,circ=2*Math.PI*r,dash=(pct/100)*circ;
-    const col=pct>=80?g.c:pct>=50?'var(--orange)':'var(--red)';
-    return `<div class="goal-card"><div class="goal-card-lbl">${g.lbl}</div>
-      <svg width="72" height="72" style="display:block;margin:0 auto 5px;transform:rotate(-90deg)">
-        <circle cx="36" cy="36" r="${r}" fill="none" stroke="var(--border)" stroke-width="6"/>
-        <circle cx="36" cy="36" r="${r}" fill="none" stroke="${col}" stroke-width="6" stroke-dasharray="${dash.toFixed(1)} ${circ.toFixed(1)}" stroke-linecap="round"/>
-      </svg>
-      <div style="font-size:18px;font-weight:900;color:${col};text-align:center">${Math.round(pct)}%</div>
-      <div style="font-size:10px;color:var(--dim);text-align:center;margin-top:2px">${Math.round(g.avg)}${g.unit} / ${g.tgt}${g.unit}</div>
-    </div>`;
-  }).join('');
+    const col=pct>=80?g.c:pct>=50?"var(--org)":"var(--red)";
+    html+='<div class="gc"><div class="gc-l">'+g.l+'</div>';
+    html+='<svg width="72" height="72" style="display:block;margin:0 auto 4px;transform:rotate(-90deg)">';
+    html+='<circle cx="36" cy="36" r="'+r+'" fill="none" stroke="var(--b)" stroke-width="6"/>';
+    html+='<circle cx="36" cy="36" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="6" stroke-dasharray="'+dash.toFixed(1)+' '+circ.toFixed(1)+'" stroke-linecap="round"/>';
+    html+='</svg>';
+    html+='<div style="font-size:17px;font-weight:900;color:'+col+';text-align:center">'+Math.round(pct)+'%</div>';
+    html+='<div style="font-size:10px;color:var(--dim);text-align:center;margin-top:2px">'+Math.round(g.avg)+g.u+' / '+g.tg+g.u+'</div></div>';
+  });
+  document.getElementById("gGrid").innerHTML=html;
 }
-
 function renderStreak(){
-  const el=document.getElementById('streakBox');if(!el)return;
-  const days=[];
-  for(let i=29;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const ds=d.toISOString().slice(0,10);days.push({ds,hit:S.meals.some(m=>m.date===ds)})}
-  let streak=0;
-  for(let i=0;i<=29;i++){const d=new Date();d.setDate(d.getDate()-i);const ds=d.toISOString().slice(0,10);if(S.meals.some(m=>m.date===ds))streak++;else break}
-  el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px"><div><span style="font-size:24px;font-weight:900;color:var(--accent)">${streak}</span><span style="font-size:12px;color:var(--muted);margin-right:6px">ימים רצופים</span></div><div style="font-size:11px;color:var(--dim)">30 ימים אחרונים</div></div><div class="streak-row">${days.map(d=>`<div class="sday ${d.hit?'hit':'miss'}">${d.hit?'✓':''}</div>`).join('')}</div>`;
+  const el=document.getElementById("stkBox");if(!el)return;
+  const days=[];for(let i=29;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const ds=d.toISOString().slice(0,10);days.push({ds,hit:S.meals.some(m=>m.date===ds)})}
+  let stk=0;for(let i=0;i<=29;i++){const d=new Date();d.setDate(d.getDate()-i);const ds=d.toISOString().slice(0,10);if(S.meals.some(m=>m.date===ds))stk++;else break}
+  let html='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px">';
+  html+='<div><span style="font-size:24px;font-weight:900;color:var(--a)">'+stk+'</span><span style="font-size:12px;color:var(--mu);margin-right:6px">ימים רצופים</span></div>';
+  html+='<div style="font-size:11px;color:var(--dim)">30 ימים אחרונים</div></div>';
+  html+='<div class="stk-row">'+days.map(d=>'<div class="sd '+(d.hit?"hit":"miss")+'">'+(d.hit?"✓":"")+"</div>").join("")+"</div>";
+  el.innerHTML=html;
 }
-
 function initCharts(){
   const data=getDays(period);
   renderKPIs(data);renderGoals(data);renderStreak();
   setTimeout(()=>{
-    drawBar('cCals',data,d=>d.cals,'rgb(181,240,61)',1500);
-    drawMultiLine('cMacro',data,[{get:d=>d.prot,color:'rgb(77,184,255)',tgt:90},{get:d=>d.fib,color:'rgb(255,140,66)',tgt:25}]);
-    drawWTrend('cWeight');
-    const ws=getWDays(period);
-    const badge=document.getElementById('wtBadge');
-    if(ws.length>=2){const d=ws[ws.length-1].w-ws[0].w;badge.textContent=(d<0?'▼ ':'▲ ')+Math.abs(d).toFixed(1)+' ק"ג';badge.style.color=d<=0?'var(--accent)':'var(--red)'}
+    drawBar("cCals",data,d=>d.cals,"rgb(181,240,61)",1500);
+    drawMulti("cMacro",data,[{g:d=>d.prot,c:"rgb(77,184,255)",tgt:90},{g:d=>d.fib,c:"rgb(255,140,66)",tgt:25}]);
+    drawWTrend("cWt");
+    const ws=getWD(period),badge=document.getElementById("wtB");
+    if(ws.length>=2){const d=ws[ws.length-1].w-ws[0].w;badge.textContent=(d<0?"▼ ":"▲ ")+Math.abs(d).toFixed(1)+' ק"ג';badge.style.color=d<=0?"var(--a)":"var(--red)"}
   },60);
 }
 
+
 async function loadInsight(){
-  const btn=document.getElementById('insightBtn'),body=document.getElementById('insightBody');
-  btn.disabled=true;body.textContent='מנתח נתונים...';
-  const data=getDays(period);const dwd=data.filter(d=>d.has);
-  if(!dwd.length){body.textContent='רשמי ארוחות לקבלת תובנה';btn.disabled=false;return}
+  const btn=document.getElementById("insBtn"),body=document.getElementById("insBody");
+  btn.disabled=true;body.textContent="מנתח נתונים...";
+  const data=getDays(period),dwd=data.filter(d=>d.has);
+  if(!dwd.length){body.textContent="רשמי ארוחות לקבלת תובנה";btn.disabled=false;return}
   const avgC=Math.round(dwd.reduce((s,d)=>s+d.cals,0)/dwd.length);
   const avgP=Math.round(dwd.reduce((s,d)=>s+d.prot,0)/dwd.length);
   const avgF=Math.round(dwd.reduce((s,d)=>s+d.fib,0)/dwd.length);
-  const ws=getWDays(period);const cw=ws.length?ws[ws.length-1].w:90;
+  const ws=getWD(period),cw=ws.length?ws[ws.length-1].w:90;
   const wc=ws.length>=2?(ws[ws.length-1].w-ws[0].w).toFixed(1):null;
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:250,messages:[{role:'user',content:'דיאטנית ישראלית. תובנה אחת חדה ומעשית (2-3 משפטים, עברית ישירה):\nמשקל: '+cw+' ק"ג, יעד 72. ממוצע '+period+' ימים: '+avgC+' קל\' (יעד 1500), '+avgP+'g חלבון (יעד 90g), '+avgF+'g סיבים (יעד 25g). ימים מתועדים: '+dwd.length+'/'+period+(wc?'. שינוי משקל: '+wc+' ק"ג':'')+'. התמקדי בדבר הכי חשוב לשיפור עכשיו.'}]})});
-    const d=await res.json();body.textContent=d.content?.[0]?.text||'לא ניתן לטעון';
-  }catch(e){body.textContent='שגיאה — נסי שוב'}
+    const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:250,messages:[{role:"user",content:"דיאטנית ישראלית. תובנה אחת חדה ומעשית (2-3 משפטים, עברית ישירה):\nמשקל: "+cw+" ק\"ג, יעד 72. ממוצע "+period+" ימים: "+avgC+" קל' (יעד 1500), "+avgP+"g חלבון (יעד 90g), "+avgF+"g סיבים (יעד 25g). ימים: "+dwd.length+"/"+period+(wc?". שינוי: "+wc+" ק\"ג":"")+". הכי חשוב לשפר עכשיו?"}]})});
+    const d=await res.json();body.textContent=d.content?.[0]?.text||"לא ניתן לטעון";
+  }catch(e){body.textContent="שגיאה — נסי שוב"}
   finally{btn.disabled=false}
 }
 
 // ── PWA ──
-if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
-let deferredPrompt=null;
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('installBanner').classList.add('show')});
-function installApp(){if(!deferredPrompt)return;deferredPrompt.prompt();deferredPrompt.userChoice.then(()=>{deferredPrompt=null;document.getElementById('installBanner').classList.remove('show')})}
-window.addEventListener('appinstalled',()=>document.getElementById('installBanner').classList.remove('show'));
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+let dPr=null;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();dPr=e;document.getElementById("inst").classList.add("show")});
+function installApp(){if(!dPr)return;dPr.prompt();dPr.userChoice.then(()=>{dPr=null;document.getElementById("inst").classList.remove("show")})}
+window.addEventListener("appinstalled",()=>document.getElementById("inst").classList.remove("show"));
 
 // ── INIT ──
 buildQuick();
 updateHeader();
 renderMeals();
+updateTimeWidget();
+// Refresh time widget every 10 minutes
+setInterval(updateTimeWidget, 600000);
 </script>
 </body>
 </html>
