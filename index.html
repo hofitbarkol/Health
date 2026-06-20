@@ -394,7 +394,13 @@ canvas{width:100%!important;height:100%!important}
 <script>
 const VER="3.0",START=90,TARGET=72,HT=1.72;
 const TGT={cals:1500,prot:90,fib:25,fat:50};
-let S=JSON.parse(localStorage.getItem("hf3")||"null")||{weights:[],meals:[],sam:{steps:null,heart:null}};
+let S=JSON.parse(localStorage.getItem("hf3")||"null");
+if(!S){
+  // migrate from previous version
+  const old=JSON.parse(localStorage.getItem("hf2")||"null");
+  S=old||{weights:[],meals:[],sam:{steps:null,heart:null}};
+  if(old)localStorage.setItem("hf3",JSON.stringify(S));
+}
 function save(){localStorage.setItem("hf3",JSON.stringify(S))}
 function today(){return new Date().toISOString().slice(0,10)}
 function todayMeals(){const t=today();return S.meals.filter(m=>m.date===t)}
