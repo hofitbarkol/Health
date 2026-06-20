@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, minimum-scale=1.0, maximum-scale=1.0">
 <title>מעקב בריאות v3</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0d0d0d">
@@ -12,6 +12,18 @@
 <meta name="apple-mobile-web-app-title" content="מעקב בריאות">
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
+html, body {
+  width: 100%;
+  min-height: 100%;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+body {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap');
 :root{--bg:#0d0d0d;--s:#181818;--s2:#212121;--b:#2a2a2a;--a:#b5f03d;--blue:#4db8ff;--org:#ff8c42;--pur:#c084fc;--red:#ff5c5c;--tx:#efefef;--mu:#777;--dim:#444}
 *{box-sizing:border-box;margin:0;padding:0}
