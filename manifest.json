@@ -2,7 +2,7 @@
   "name": "מעקב בריאות v3",
   "short_name": "בריאות",
   "description": "מעקב משקל, תזונה ומאקרו יומי",
-  "start_url": "/",
+  "start_url": "/Health/",
   "display": "standalone",
   "background_color": "#0d0d0d",
   "theme_color": "#0d0d0d",
@@ -23,5 +23,6 @@
       "purpose": "any maskable"
     }
   ],
-  "version": "3.0"
+  "version": "3.0",
+  "scope": "/Health/"
 }
